@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="black">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="max-w-4xl mx-auto px-4">
-  <nav class="navbar bg-base-100 rounded-box shadow-base-300/20 shadow-sm">
+  <nav class="navbar bg-base-100 rounded-box shadow-base-300/20 shadow-sm sticky top-0 z-50">
   <div class="flex flex-1 items-center">
     <a class="link text-base-content link-neutral text-xl font-bold no-underline" href="#">
       Trends
