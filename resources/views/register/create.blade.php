@@ -1,5 +1,5 @@
 <x-layouts.auth>
-    <div class="bg-base-100 flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-10">
+    <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-10">
     <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div class="bg-base-100 shadow-base-300/20 z-1 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
         <div class="flex items-center gap-3">
