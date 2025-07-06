@@ -65,4 +65,16 @@
   <div class="mt-8">
     {{ $slot }}
   </div>
+  <div
+    class="border border-base-200 border-t-2 border-t-primary rounded-field sticky bottom-2 drop-shadow-2xl bg-base-100">
+    <div class="textarea-floating">
+        <textarea class="textarea border-0 resize-none min-h-8 max-h-16" placeholder="Hello!!!" id="textareaFloating"></textarea>
+        <label class="textarea-floating-label" for="textareaFloating">Write a tweet</label>
+    </div>
+    <div class="p-1">
+        <button class="btn btn-primary btn-sm">
+            Tweet
+        </button>
+    </div>
+</div>
 </x-layouts.default>
