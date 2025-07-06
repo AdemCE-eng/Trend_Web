@@ -1,5 +1,5 @@
 <a href="/tweet/view">
-    <div class="card card-border shadow-none mt-4">
+    <div class="card card-border shadow-none mt-4 bg-green-30">
     <div class="card-body">
         <p class="mb-4">Discover the features and benefits that our service offers. Enhance your experience with our
             user-friendly platform designed to meet all your needs.</p>
