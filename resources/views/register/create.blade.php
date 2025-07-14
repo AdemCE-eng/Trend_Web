@@ -1,11 +1,11 @@
 <x-layouts.auth>
-    <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-10">
+  <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-10">
     <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div class="bg-base-100 shadow-base-300/20 z-1 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
-        <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3">
           <img src="/images/Trends_Logo.png" class="size-8 rounded-md" alt="logo">
           <h2 class="text-base-content text-xl font-bold">Trends</h2>
-        </div>
+        </a>
         <div>
           <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Sign Up to Trends</h3>
         </div>
@@ -23,12 +23,8 @@
               <label class="label-text" for="userPassword">Password*</label>
               <div class="input">
                 <input id="userPassword" type="password" placeholder="············" required />
-                <button
-                  type="button"
-                  data-toggle-password='{ "target": "#userPassword" }'
-                  class="block cursor-pointer"
-                  aria-label="userPassword"
-                >
+                <button type="button" data-toggle-password='{ "target": "#userPassword" }' class="block cursor-pointer"
+                  aria-label="userPassword">
                   <span class="icon-[tabler--eye] password-active:block hidden size-5 shrink-0"></span>
                   <span class="icon-[tabler--eye-off] password-active:hidden block size-5 shrink-0"></span>
                 </button>
@@ -38,12 +34,8 @@
               <label class="label-text" for="userConfrimPassword">Confirm Password*</label>
               <div class="input">
                 <input id="userConfrimPassword" type="password" placeholder="············" required />
-                <button
-                  type="button"
-                  data-toggle-password='{ "target": "#userConfrimPassword" }'
-                  class="block cursor-pointer"
-                  aria-label="userConfrimPassword"
-                >
+                <button type="button" data-toggle-password='{ "target": "#userConfrimPassword" }'
+                  class="block cursor-pointer" aria-label="userConfrimPassword">
                   <span class="icon-[tabler--eye] password-active:block hidden size-5 shrink-0"></span>
                   <span class="icon-[tabler--eye-off] password-active:hidden block size-5 shrink-0"></span>
                 </button>
