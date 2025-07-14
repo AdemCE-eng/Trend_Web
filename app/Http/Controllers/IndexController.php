@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    function index() {
-        return User::with("tweets")->get();
-}
+    function index()
+    {
+        return view('index');
+    }
 }
