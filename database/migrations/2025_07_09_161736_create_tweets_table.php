@@ -19,10 +19,12 @@ return new class extends Migration {
                 ->cascadeOnDelete();
 
             $table->foreignId('base_tweet_id')
+                ->nullable()
                 ->constrained('tweets')
                 ->cascadeOnDelete();
 
             $table->foreignId('parent_tweet_id')
+                ->nullable()
                 ->constrained('tweets')
                 ->cascadeOnDelete();
 
