@@ -4,10 +4,10 @@
       <div class="absolute">
       </div>
       <div class="bg-base-100 shadow-base-300/20 z-1 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
-        <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-3">
           <img src="/images/Trends_Logo.png" class="size-8 rounded-md" alt="brand-logo" />
           <h2 class="text-base-content text-xl font-bold">Trends</h2>
-        </div>
+        </a>
         <div>
           <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Sign in to Trends</h3>
         </div>
