@@ -1,21 +1,32 @@
-<a href="/tweet/view">
+<a href="{{ route('tweet.view') }}">
     <div class="card card-border shadow-none mt-4 bg-green-30">
-    <div class="card-body">
-        <p class="mb-4">Discover the features and benefits that our service offers. Enhance your experience with our
-            user-friendly platform designed to meet all your needs.</p>
-        <div class="card-actions flex justify-between">
-            <div>
-                <button class="btn btn-text">Comment</button>
-            </div>
-            <a class="avatar link link-hover">
-                <div class="mr-2 mt-2">
+        <div class="card-body">
+            <div class="flex items-center mb-3">
+                <div class="size-10 rounded-full mr-3">
+                    <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar"
+                        class="w-full h-full rounded-full object-cover" />
+                </div>
+                <div class="font-medium text-gray-700">
                     Guest
                 </div>
-                <div class="size-8 rounded-full mt-1">
-                    <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar" />
-                </div>
-            </a>
+            </div>
+            <p class="mb-4 ml-13">Discover the features and benefits that our service offers. Enhance your experience
+                with our
+                user-friendly platform designed to meet all your needs.</p>
+            <div class="flex gap-4 ml-13">
+                <button class="btn-sm">
+                    <span class="icon-[tabler--message-circle] size-4"></span>
+                </button>
+                <button class="btn-sm">
+                    <span class="icon-[tabler--heart] size-4"></span>
+                </button>
+                <button class="btn-sm">
+                    <span class="icon-[tabler--repeat] size-4"></span>
+                </button>
+                <button class="btn-sm">
+                    <span class="icon-[tabler--share] size-4"></span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 </a>
