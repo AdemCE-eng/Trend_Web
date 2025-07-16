@@ -78,17 +78,30 @@
   <div class="mt-8">
     {{ $slot }}
   </div>
-  <div
-    class="border border-base-200 border-t-2 border-t-primary rounded-field sticky bottom-2 drop-shadow-2xl bg-base-100">
-    <div class="textarea-floating">
-      <textarea class="textarea border-0 resize-none min-h-8 max-h-16" placeholder="Share your thoughts…"
-        id="textareaFloating"></textarea>
-      <label class="textarea-floating-label" for="textareaFloating">Write a tweet</label>
-    </div>
-    <div class="p-1">
-      <button class="btn btn-primary btn-sm">
-        Tweet
-      </button>
+  <div class="fixed bottom-4 left-4 right-4 mx-auto max-w-2xl">
+    <div class="bg-base-100 border border-base-200 rounded-xl shadow-lg p-4 backdrop-blur-sm">
+      <div class="flex flex-col gap-3">
+        <div class="textarea-floating">
+          <textarea class="textarea border border-base-300 focus:border-primary focus:outline-none resize-none min-h-12 max-h-32 rounded-lg px-3 py-2 transition-all duration-200" 
+            placeholder="What's happening?" 
+            id="textareaFloating"></textarea>
+          <label class="textarea-floating-label text-base-content/60" for="textareaFloating">Share your thoughts</label>
+        </div>
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2 text-base-content/50">
+            <span class="icon-[tabler--photo] text-lg cursor-pointer hover:text-primary transition-colors"></span>
+            <span class="icon-[tabler--mood-smile] text-lg cursor-pointer hover:text-primary transition-colors"></span>
+            <span class="icon-[tabler--map-pin] text-lg cursor-pointer hover:text-primary transition-colors"></span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-base-content/50 font-medium">0/300</span>
+            <button class="btn btn-primary btn-sm px-6 hover:btn-primary-focus transition-all duration-200">
+              <span class="icon-[tabler--send] mr-1"></span>
+              Tweet
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </x-layouts.default>
