@@ -54,10 +54,13 @@
         </a>
         </li>
         <li class="dropdown-footer gap-2">
-        <a class="btn btn-error btn-soft btn-block" href="#">
+        <form method="post" action="{{ route('logout') }}" class="w-full">
+          @csrf
+          <button type="submit" class="btn btn-error btn-soft btn-block">
           <span class="icon-[tabler--logout]"></span>
           Sign out
-        </a>
+          </button>
+        </form>
         </li>
       </ul>
       </div>
@@ -82,9 +85,9 @@
     <div class="bg-base-100 border border-base-200 rounded-xl shadow-lg p-4 backdrop-blur-sm">
       <div class="flex flex-col gap-3">
         <div class="textarea-floating">
-          <textarea class="textarea border border-base-300 focus:border-primary focus:outline-none resize-none min-h-12 max-h-32 rounded-lg px-3 py-2 transition-all duration-200" 
-            placeholder="What's happening?" 
-            id="textareaFloating"></textarea>
+          <textarea
+            class="textarea border border-base-300 focus:border-primary focus:outline-none resize-none min-h-12 max-h-32 rounded-lg px-3 py-2 transition-all duration-200"
+            placeholder="What's happening?" id="textareaFloating"></textarea>
           <label class="textarea-floating-label text-base-content/60" for="textareaFloating">Share your thoughts</label>
         </div>
         <div class="flex justify-between items-center">
