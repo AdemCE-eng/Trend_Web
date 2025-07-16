@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -11,7 +13,9 @@ class RegisterController extends Controller
         return view("register.create");
     }
     function store(RegisterRequest $request){
-        return $request->validated();
+        $user = User::create($request->validated());
+        Auth::login($user, true);
+        return redirect()->route('home');
     }
 }
 
