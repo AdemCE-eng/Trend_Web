@@ -12,41 +12,67 @@
         <div class="space-y-4 pl-3">
           <form method="post" class="mb-4 space-y-4">
             @csrf
-            <div class="input">
-              <span class="icon-[tabler--user] text-base-content/80 my-auto size-5 shrink-0"></span>
-              <div class="input-floating grow">
-                <input
-                  required
-                  type="text"
-                  placeholder="Enter your username"
-                  class="ps-3"
-                  id="name"
-                  name="name"
-                  maxLength="20"
-                  minlength="3"
-                  pattern="^[a-zA-Z][a-zA-Z0-9_]*$"
-                  value="{{ old('name') }}"
-                  title="Username must be 3-20 characters, start with a letter, and contain only letters, numbers, or underscores (no spaces allowed)"
-                />
-                <label class="input-floating-label" for="name">Username</label>
+            <div>
+              <div class="input">
+                <span class="icon-[tabler--user] text-base-content/80 my-auto size-5 shrink-0"></span>
+                <div class="input-floating grow">
+                  <input
+                    required
+                    type="text"
+                    placeholder="Enter your username"
+                    class="ps-3 @error('name') border-error @enderror"
+                    id="name"
+                    name="name"
+                    maxLength="20"
+                    minlength="3"
+                    pattern="^[a-zA-Z][a-zA-Z0-9_]*$"
+                    value="{{ old('name') }}"
+                    title="Username must be 3-20 characters, start with a letter, and contain only letters, numbers, or underscores (no spaces allowed)"
+                  />
+                  <label class="input-floating-label @error('name') text-error @enderror" for="name">Username</label>
+                </div>
               </div>
+              @error('name')
+                <div class="text-error text-sm mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{{ $message }}</span>
+                </div>
+              @enderror
             </div>
-            <div class="input">
-              <span class="icon-[tabler--mail] text-base-content/80 my-auto size-5 shrink-0"></span>
-              <div class="input-floating grow">
-                <input
-                  required
-                  type="email"
-                  placeholder="Enter your email address"
-                  class="ps-3"
-                  id="email"
-                  name="email"
-                  maxLength="255"
-                  value="{{ old('email') }}"
-                  title="Please enter a valid email address"
-                />
-                <label class="input-floating-label" for="email">Email address</label>
+            <div>
+              <div class="input">
+                <span class="icon-[tabler--mail] text-base-content/80 my-auto size-5 shrink-0"></span>
+                <div class="input-floating grow">
+                  <input
+                    required
+                    type="email"
+                    placeholder="Enter your email address"
+                    class="ps-3 @error('email') border-error @enderror"
+                    id="email"
+                    name="email"
+                    maxLength="255"
+                    value="{{ old('email') }}"
+                    title="Please enter a valid email address"
+                  />
+                  <label class="input-floating-label @error('email') text-error @enderror" for="email">Email Address</label>
+                </div>
               </div>
+              @error('email')
+                <div class="text-error text-sm mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{{ $message }}</span>
+                </div>
+              @enderror
             </div>
             <div>
               <div class="input">
@@ -56,7 +82,7 @@
                     required
                     type="password"
                     placeholder="············"
-                    class="ps-3"
+                    class="ps-3 @error('password') border-error @enderror"
                     id="password"
                     name="password"
                     maxLength="255"
@@ -64,7 +90,7 @@
                     pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                     title="Password must be at least 8 characters with uppercase, lowercase, number, and special character"
                   />
-                  <label class="input-floating-label" for="password">Password</label>
+                  <label class="input-floating-label @error('password') text-error @enderror" for="password">Password</label>
                 </div>
                 <button type="button" data-toggle-password='{ "target": "#password" }' class="block cursor-pointer"
                   aria-label="Toggle password visibility">
@@ -72,6 +98,17 @@
                   <span class="icon-[tabler--eye-off] password-active:hidden block size-5 shrink-0"></span>
                 </button>
               </div>
+              @error('password')
+                <div class="text-error text-sm mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{{ $message }}</span>
+                </div>
+              @enderror
               <div class="text-sm text-base-content/60 mt-2">
                 <!-- Password Strength Bar -->
                 <div class="password-strength mb-3">
@@ -112,37 +149,63 @@
                 </ul>
               </div>
             </div>
-            <div class="input">
-              <span class="icon-[tabler--lock-check] text-base-content/80 my-auto size-5 shrink-0"></span>
-              <div class="input-floating grow">
-                <input
-                  required
-                  type="password"
-                  placeholder="············"
-                  class="ps-3"
-                  id="password_confirmation"
-                  name="password_confirmation"
-                  maxLength="255"
-                  minlength="8"
-                />
-                <label class="input-floating-label" for="password_confirmation">Confirm Password</label>
+            <div>
+              <div class="input">
+                <span class="icon-[tabler--lock-check] text-base-content/80 my-auto size-5 shrink-0"></span>
+                <div class="input-floating grow">
+                  <input
+                    required
+                    type="password"
+                    placeholder="············"
+                    class="ps-3 @error('password_confirmation') border-error @enderror"
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    maxLength="255"
+                    minlength="8"
+                  />
+                  <label class="input-floating-label @error('password_confirmation') text-error @enderror" for="password_confirmation">Confirm Password</label>
+                </div>
+                <button type="button" data-toggle-password='{ "target": "#password_confirmation" }'
+                  class="block cursor-pointer" aria-label="Toggle password confirmation visibility">
+                  <span class="icon-[tabler--eye] password-active:block hidden size-5 shrink-0"></span>
+                  <span class="icon-[tabler--eye-off] password-active:hidden block size-5 shrink-0"></span>
+                </button>
               </div>
-              <button type="button" data-toggle-password='{ "target": "#password_confirmation" }'
-                class="block cursor-pointer" aria-label="Toggle password confirmation visibility">
-                <span class="icon-[tabler--eye] password-active:block hidden size-5 shrink-0"></span>
-                <span class="icon-[tabler--eye-off] password-active:hidden block size-5 shrink-0"></span>
-              </button>
+              @error('password_confirmation')
+                <div class="text-error text-sm mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{{ $message }}</span>
+                </div>
+              @enderror
             </div>
-            <div class="flex items-center gap-2">
-              <input type="checkbox" 
-                     class="checkbox checkbox-primary" 
-                     id="policyagreement" 
-                     name="terms" 
-                     required />
-              <label class="label-text text-base-content/80 p-0 text-base" for="policyagreement">
-                I agree to
-                <a href="#" class="link link-animated link-primary font-normal">privacy policy & terms</a>
-              </label>
+            <div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" 
+                       class="checkbox @error('terms') checkbox-error @else checkbox-primary @enderror" 
+                       id="policyagreement" 
+                       name="terms" 
+                       required />
+                <label class="label-text p-0 text-base text-base-content/80" for="policyagreement">
+                  I agree to
+                  <a href="#" class="link link-animated link-primary font-normal">privacy policy & terms</a>
+                </label>
+              </div>
+              @error('terms')
+                <div class="text-error text-sm mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{{ $message }}</span>
+                </div>
+              @enderror
             </div>
             <button type="submit" class="btn btn-lg btn-primary btn-gradient btn-block">Sign Up to Trends</button>
           </form>
