@@ -12,7 +12,7 @@
         aria-expanded="false" aria-label="Dropdown">
         <div class="avatar">
         <div class="size-9.5 rounded-full">
-          <img src="/images/Trends_Logo.png" alt="Logo" />
+          <img src="/storage/{{ Auth::user()->avatar }}" alt="Logo" />
         </div>
         </div>
       </button>
@@ -21,11 +21,11 @@
         <li class="dropdown-header gap-2">
         <div class="avatar">
           <div class="w-10 rounded-full">
-          <img src="/images/Trends_logo.png" alt="avatar" />
+          <img src="/storage/{{ Auth::user()->avatar }}" alt="avatar" />
           </div>
         </div>
         <div>
-          <h6 class="text-base-content text-base font-semibold">John Doe</h6>
+          <h6 class="text-base-content text-base font-semibold">{{ Auth::user()->name }}</h6>
           <small class="text-base-content/50">Admin</small>
         </div>
         </li>
