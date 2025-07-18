@@ -49,6 +49,13 @@ class RegisterRequest extends FormRequest
                 'required',
                 'accepted'
             ],
+            "avatar" => [
+                'nullable',
+                'image',
+                'mimes:jpeg,jpg,png',
+                'max:2048', // 2MB max
+                'dimensions:min_width=50,min_height=50,max_width=2000,max_height=2000'
+            ],
         ];
     }
 
@@ -79,6 +86,11 @@ class RegisterRequest extends FormRequest
             
             'terms.required' => 'You must accept the terms and conditions.',
             'terms.accepted' => 'You must agree to the privacy policy and terms.',
+            
+            'avatar.image' => 'Avatar must be an image file.',
+            'avatar.mimes' => 'Avatar must be a PNG or JPEG file only.',
+            'avatar.max' => 'Avatar file size cannot exceed 2MB.',
+            'avatar.dimensions' => 'Avatar must be between 50x50 and 2000x2000 pixels.',
         ];
     }
 }
