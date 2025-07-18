@@ -1,17 +1,59 @@
 <x-layouts.auth>
-  <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-10">
+  <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-6">
     <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div class="bg-base-100 shadow-base-300/20 z-1 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
-        <a href="{{ route('home') }}" class="flex items-center gap-3 pl-3">
+      <div class="bg-base-100 shadow-base-300/20 z-1 w-full space-y-4 rounded-xl p-6 shadow-md sm:min-w-md lg:p-6">
+        <div class="text-center">
+          <a href="{{ route('home') }}" class="flex justify-center items-center gap-3 pb-2">
           <img src="/images/Trends_Logo.png" class="size-8 rounded-md" alt="logo">
           <h2 class="text-base-content text-xl font-bold">Trends</h2>
         </a>
-        <div class="pl-3">
-          <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Sign Up to Trends</h3>
+        <div>
+          <h3 class="text-base-content mb-4 text-2xl font-semibold">Sign Up to Trends</h3>
         </div>
-        <div class="space-y-4 pl-3">
-          <form method="post" class="mb-4 space-y-4">
+        </div>
+        <div class="space-y-3">
+          <form method="post" class="space-y-3" enctype="multipart/form-data">
             @csrf
+            <!-- Avatar Upload Section -->
+            <div class="flex justify-center">
+              <div class="flex flex-col items-center">
+                <div class="relative group">
+                  <div class="avatar-preview w-16 h-16 rounded-full border-2 border-base-300 bg-base-200 flex items-center justify-center overflow-hidden mb-2 transition-all duration-300 group-hover:border-primary">
+                    <img id="avatar-image" src="" alt="Avatar preview" class="w-full h-full object-cover hidden" />
+                    <span class="icon-[tabler--camera] text-base-content/40 size-6" id="avatar-placeholder"></span>
+                  </div>
+                  <label for="avatar" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/0 group-hover:bg-black/10 rounded-full transition-colors duration-300">
+                    <span class="sr-only">Choose avatar</span>
+                  </label>
+                </div>
+                <label for="avatar" class="btn btn-xs btn-outline btn-primary cursor-pointer">
+                  <span class="icon-[tabler--upload] size-3"></span>
+                  Choose Avatar
+                </label>
+                <input
+                  type="file"
+                  id="avatar"
+                  name="avatar"
+                  accept=".png,.jpg,.jpeg"
+                  class="hidden @error('avatar') border-error @enderror"
+                  onchange="previewAvatar(this)"
+                />
+                <p class="text-xs text-base-content/60 mt-1 text-center">
+                  Upload PNG or JPEG only (max 2MB)
+                </p>
+              </div>
+              @error('avatar')
+                <div class="text-error text-xs mt-1 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-3 mr-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{{ $message }}</span>
+                </div>
+              @enderror
+            </div>
             <div>
               <div class="input">
                 <span class="icon-[tabler--user] text-base-content/80 my-auto size-5 shrink-0"></span>
@@ -33,8 +75,8 @@
                 </div>
               </div>
               @error('name')
-                <div class="text-error text-sm mt-1 pl-8 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <div class="text-error text-xs mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-3 mr-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <circle cx="12" cy="12" r="9" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -63,8 +105,8 @@
                 </div>
               </div>
               @error('email')
-                <div class="text-error text-sm mt-1 pl-8 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <div class="text-error text-xs mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-3 mr-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <circle cx="12" cy="12" r="9" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -99,8 +141,8 @@
                 </button>
               </div>
               @error('password')
-                <div class="text-error text-sm mt-1 pl-8 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <div class="text-error text-xs mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-3 mr-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <circle cx="12" cy="12" r="9" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -109,18 +151,18 @@
                   <span>{{ $message }}</span>
                 </div>
               @enderror
-              <div class="text-sm text-base-content/60 mt-2">
+              <div class="text-xs text-base-content/60 mt-2">
                 <!-- Password Strength Bar -->
-                <div class="password-strength mb-3">
+                <div class="password-strength mb-2">
                   <div class="flex items-center justify-between mb-1">
                     <span class="text-xs font-medium">Password strength</span>
                     <span class="text-xs strength-text text-base-content/70">Enter password</span>
                   </div>
                   <div class="flex gap-1 mb-2">
-                    <div class="h-2 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="1"></div>
-                    <div class="h-2 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="2"></div>
-                    <div class="h-2 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="3"></div>
-                    <div class="h-2 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="4"></div>
+                    <div class="h-1.5 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="1"></div>
+                    <div class="h-1.5 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="2"></div>
+                    <div class="h-1.5 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="3"></div>
+                    <div class="h-1.5 bg-base-300 rounded-full flex-1 strength-bar transition-colors duration-300" data-level="4"></div>
                   </div>
                 </div>
                 
@@ -128,23 +170,23 @@
                 <ul class="list-none ml-0 text-xs space-y-1">
                   <li class="requirement flex items-center gap-2" data-requirement="length">
                     <span class="requirement-icon text-base-content/40">○</span>
-                    <span>At least 8 characters</span>
+                    <span>8+ characters</span>
                   </li>
                   <li class="requirement flex items-center gap-2" data-requirement="uppercase">
                     <span class="requirement-icon text-base-content/40">○</span>
-                    <span>One uppercase letter</span>
+                    <span>Uppercase letter</span>
                   </li>
                   <li class="requirement flex items-center gap-2" data-requirement="lowercase">
                     <span class="requirement-icon text-base-content/40">○</span>
-                    <span>One lowercase letter</span>
+                    <span>Lowercase letter</span>
                   </li>
                   <li class="requirement flex items-center gap-2" data-requirement="number">
                     <span class="requirement-icon text-base-content/40">○</span>
-                    <span>One number</span>
+                    <span>Number</span>
                   </li>
                   <li class="requirement flex items-center gap-2" data-requirement="special">
                     <span class="requirement-icon text-base-content/40">○</span>
-                    <span>One special character (@$!%*?&)</span>
+                    <span>Special character</span>
                   </li>
                 </ul>
               </div>
@@ -172,8 +214,8 @@
                 </button>
               </div>
               @error('password_confirmation')
-                <div class="text-error text-sm mt-1 pl-8 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <div class="text-error text-xs mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-3 mr-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <circle cx="12" cy="12" r="9" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -186,18 +228,18 @@
             <div>
               <div class="flex items-center gap-2">
                 <input type="checkbox" 
-                       class="checkbox @error('terms') checkbox-error @else checkbox-primary @enderror" 
+                       class="checkbox checkbox-sm @error('terms') checkbox-error @else checkbox-primary @enderror" 
                        id="policyagreement" 
                        name="terms" 
                        required />
-                <label class="label-text p-0 text-base text-base-content/80" for="policyagreement">
+                <label class="label-text p-0 text-sm text-base-content/80" for="policyagreement">
                   I agree to
                   <a href="#" class="link link-animated link-primary font-normal">privacy policy & terms</a>
                 </label>
               </div>
               @error('terms')
-                <div class="text-error text-sm mt-1 pl-8 flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="size-4 mr-2 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <div class="text-error text-xs mt-1 pl-8 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="size-3 mr-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                     <circle cx="12" cy="12" r="9" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -207,9 +249,9 @@
                 </div>
               @enderror
             </div>
-            <button type="submit" class="btn btn-lg btn-primary btn-gradient btn-block">Sign Up to Trends</button>
+            <button type="submit" class="btn btn-md btn-primary btn-gradient btn-block">Sign Up to Trends</button>
           </form>
-          <p class="text-base-content/80 mb-4 text-center">
+          <p class="text-base-content/80 text-center text-sm">
             Already have an account?
             <a href="{{route('login')}}" class="link link-animated link-primary font-normal">Sign in instead</a>
           </p>
