@@ -13,20 +13,21 @@ return new class extends Migration {
         Schema::create('tweets', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreignId('user_id')
                 ->constrained()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->foreignId('base_tweet_id')
                 ->nullable()
                 ->constrained('tweets')
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->foreignId('parent_tweet_id')
                 ->nullable()
                 ->constrained('tweets')
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->text('content');
         });
