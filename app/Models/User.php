@@ -46,6 +46,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the user's avatar URL with fallback to default
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->attributes['avatar'] ?? null) {
+            return asset('storage/' . $this->attributes['avatar']);
+        }
+
+        return asset('images/default-avatar.png');
+    }
     public function tweets()
     {
         return $this->hasMany(Tweet::class);
