@@ -12,7 +12,7 @@
         aria-expanded="false" aria-label="Dropdown">
         <div class="avatar">
         <div class="size-9.5 rounded-full">
-          <img src="/storage/{{ Auth::user()->avatar }}" alt="Logo" />
+          <img src="{{ Auth::user()->avatar_url }}" alt="Logo" />
         </div>
         </div>
       </button>
@@ -21,7 +21,7 @@
         <li class="dropdown-header gap-2">
         <div class="avatar">
           <div class="w-10 rounded-full">
-          <img src="/storage/{{ Auth::user()->avatar }}" alt="avatar" />
+          <img src="{{ Auth::user()->avatar_url }}" alt="avatar" />
           </div>
         </div>
         <div>
