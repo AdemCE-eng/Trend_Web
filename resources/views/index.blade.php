@@ -1,8 +1,5 @@
 <x-layouts.app>
-    <x-trend></x-trend>
-    <x-trend></x-trend>
-    <x-trend></x-trend>
-    <x-trend></x-trend>
-    <x-trend></x-trend>
-    <x-trend></x-trend>
+    @foreach ($tweets as $tweet)
+    <x-trend :tweet="$tweet"></x-trend>
+    @endforeach
 </x-layouts.app>
