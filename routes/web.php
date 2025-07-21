@@ -7,19 +7,23 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TweetController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [IndexController::class, 'index'])
+Route::get('/', [TweetController::class, 'index'])
     ->name('home');
 
 Route::get('/tweet/view', [TweetController::class, 'view'])
     ->name('tweet.view');
 
+Route::post('/tweet/create', [TweetController::class, 'store'])
+    ->name('tweet.create');
+
 Route::get('/register', [RegisterController::class, 'create'])
     ->name('register');
+
 Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
-Route::post('/login', [LoginController::class,'store']);
+Route::post('/login', [LoginController::class, 'store']);
 
 Route::post('/logout', LogoutController::class)
     ->name('logout');
