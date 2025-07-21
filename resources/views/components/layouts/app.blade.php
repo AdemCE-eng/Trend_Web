@@ -1,5 +1,5 @@
 <x-layouts.default>
-  <nav class="navbar bg-base-100 rounded-box shadow-base-300/20 shadow-sm sticky top-0 z-50 border-b-1 h-16 px-6">
+  <nav class="navbar bg-base-100 rounded-box shadow-base-300/20 shadow-sm sticky top-2 z-50 border-b-1 h-18 px-6">
     <div class="flex flex-1 items-center">
       <a class="link text-base-content link-neutral text-2xl font-bold no-underline" href="{{route('home')}}">
         Trends
@@ -12,7 +12,7 @@
         aria-expanded="false" aria-label="Dropdown">
         <div class="avatar">
         <div class="size-9.5 rounded-full">
-          <img src="{{ Auth::user()->avatar_url }}" alt="Logo" />
+          <img src="{{ Auth::user()->avatar_url }}" alt="avatar" />
         </div>
         </div>
       </button>
@@ -78,7 +78,7 @@
     @endif
     </div>
   </nav>
-  <div class="mt-8">
+  <div class="mt-5 @if(Auth::check()) pb-32 @else pb-10 @endif">
     {{ $slot }}
   </div>
   @if (Auth::check())
@@ -89,10 +89,16 @@
         <div class="flex flex-col gap-3">
           <div class="textarea-floating">
             <textarea
-              class="textarea border border-base-300 focus:border-primary focus:outline-none resize-none min-h-12 max-h-32 rounded-lg px-3 py-2 transition-all duration-200"
-              placeholder="What's happening?" id="textareaFloating" name="content"></textarea>
+              class="textarea border focus:outline-none resize-none min-h-12 max-h-32 rounded-lg px-3 py-2 transition-all duration-200 {{ $errors->has('content') ? 'border-error focus:border-error' : 'border-base-300 focus:border-primary' }}"
+              placeholder="What's happening?" id="textareaFloating" name="content" maxlength="10000">{{ old('content') }}</textarea>
             <label class="textarea-floating-label text-base-content/60" for="textareaFloating">Share your
               thoughts</label>
+            @error('content')
+              <div class="text-error text-sm mt-1">
+                <span class="icon-[tabler--alert-circle] mr-1"></span>
+                {{ $message }}
+              </div>
+            @enderror
           </div>
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2 text-base-content/50">
