@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [TweetController::class, 'index'])
     ->name('home');
 
-Route::get('/tweet/view', [TweetController::class, 'view'])
+Route::get('/tweet/{tweet}', [TweetController::class, 'view'])
     ->name('tweet.view');
 
 Route::post('/tweet/create', [TweetController::class, 'store'])
