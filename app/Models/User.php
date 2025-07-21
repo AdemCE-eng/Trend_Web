@@ -58,6 +58,7 @@ class User extends Authenticatable
 
         return asset('images/default-avatar.png');
     }
+    
     public function tweets()
     {
         return $this->hasMany(Tweet::class);
