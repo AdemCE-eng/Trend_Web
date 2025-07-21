@@ -11,13 +11,16 @@ class TweetController extends Controller
 {
     function index()
     {
-        $tweets = Tweet::all();
+        $tweets = Tweet::query()
+            ->orderByDesc('created_at')
+            ->limit(20)
+            ->get();
         return view('index', compact('tweets'));
     }
 
-    function view()
+    function view(Tweet $tweet)
     {
-        return view("/tweet/view");
+        return view("tweet.view", compact("tweet"));
     }
 
     function store(StoreTweetRequest $request)
