@@ -19,10 +19,10 @@
               <div class="flex flex-col items-center">
                 <div class="relative group">
                   <div class="avatar-preview w-16 h-16 rounded-full border-2 border-base-300 bg-base-200 flex items-center justify-center overflow-hidden mb-2 transition-all duration-300 group-hover:border-primary">
-                    <img id="avatar-image" src="" alt="Avatar preview" class="w-full h-full object-cover hidden" />
+                    <img id="avatar-image" src="/images/default-avatar.png" alt="Avatar preview" class="w-full h-full object-cover hidden" />
                     <span class="icon-[tabler--camera] text-base-content/40 size-6" id="avatar-placeholder"></span>
                   </div>
-                  <label for="avatar" class="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/0 group-hover:bg-black/10 rounded-full transition-colors duration-300">
+                  <label for="avatar" class="absolute inset-0 cursor-pointer rounded-full">
                     <span class="sr-only">Choose avatar</span>
                   </label>
                 </div>
@@ -259,4 +259,28 @@
       </div>
     </div>
   </div>
+
+  <!-- Avatar Preview Script -->
+  <script>
+    function previewAvatar(input) {
+      const preview = document.getElementById('avatar-image');
+      const placeholder = document.getElementById('avatar-placeholder');
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.classList.remove('hidden');
+          placeholder.classList.add('hidden');
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        // If no file selected, hide preview and show placeholder
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      }
+    }
+  </script>
 </x-layouts.auth>
