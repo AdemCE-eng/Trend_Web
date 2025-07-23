@@ -3,6 +3,7 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TweetController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,26 @@ Route::get('/tweet/{tweet}', [TweetController::class, 'view'])
 
 Route::post('/tweet/create', [TweetController::class, 'store'])
     ->name('tweet.create');
+
+// Profile routes - Auth routes must come before the dynamic route
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', function () {
+        return redirect()->route('profile.show', auth()->user());
+    })->name('profile');
+    
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+    
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password.update');
+});
+
+// This dynamic route must come after the specific routes above
+Route::get('/profile/{user}', [ProfileController::class, 'show'])
+    ->name('profile.show');
 
 Route::get('/register', [RegisterController::class, 'create'])
     ->name('register');
