@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const strengthText = document.querySelector('.strength-text');
     const requirements = document.querySelectorAll('.requirement');
     
-    if (!passwordInput) return;
+    // Exit early if required elements don't exist
+    if (!passwordInput || !strengthText || strengthBars.length === 0) return;
     
     // Password strength checker function
     function checkPasswordStrength(password) {
@@ -21,26 +22,28 @@ document.addEventListener('DOMContentLoaded', function() {
             special: /[@$!%*?&]/.test(password)
         };
         
-        // Update requirement indicators
-        requirements.forEach(req => {
-            const requirement = req.dataset.requirement;
-            const icon = req.querySelector('.requirement-icon');
-            
-            if (checks[requirement]) {
-                req.classList.add('text-success');
-                req.classList.remove('text-base-content/60');
-                icon.textContent = '✓';
-                icon.classList.add('text-success');
-                icon.classList.remove('text-base-content/40');
-                strength++;
-            } else {
-                req.classList.remove('text-success');
-                req.classList.add('text-base-content/60');
-                icon.textContent = '○';
-                icon.classList.remove('text-success');
-                icon.classList.add('text-base-content/40');
-            }
-        });
+        // Update requirement indicators (only if they exist)
+        if (requirements.length > 0) {
+            requirements.forEach(req => {
+                const requirement = req.dataset.requirement;
+                const icon = req.querySelector('.requirement-icon');
+                
+                if (icon && checks[requirement]) {
+                    req.classList.add('text-success');
+                    req.classList.remove('text-base-content/60');
+                    icon.textContent = '✓';
+                    icon.classList.add('text-success');
+                    icon.classList.remove('text-base-content/40');
+                    strength++;
+                } else if (icon) {
+                    req.classList.remove('text-success');
+                    req.classList.add('text-base-content/60');
+                    icon.textContent = '○';
+                    icon.classList.remove('text-success');
+                    icon.classList.add('text-base-content/40');
+                }
+            });
+        }
         
         // Determine strength level and colors
         if (password.length === 0) {
@@ -58,40 +61,44 @@ document.addEventListener('DOMContentLoaded', function() {
             strengthLevel = 'Strong';
         }
         
-        // Update strength bars
-        strengthBars.forEach((bar, index) => {
-            // Reset all colors
-            bar.classList.remove('bg-error', 'bg-warning', 'bg-success', 'bg-info');
-            
-            if (index < strength) {
-                if (strength <= 2) {
-                    bar.classList.add('bg-error'); // Red for weak
-                } else if (strength === 3) {
-                    bar.classList.add('bg-warning'); // Yellow for fair
-                } else if (strength === 4) {
-                    bar.classList.add('bg-info'); // Blue for good
+        // Update strength bars (only if they exist)
+        if (strengthBars.length > 0) {
+            strengthBars.forEach((bar, index) => {
+                // Reset all colors
+                bar.classList.remove('bg-error', 'bg-warning', 'bg-success', 'bg-info');
+                
+                if (index < strength) {
+                    if (strength <= 2) {
+                        bar.classList.add('bg-error'); // Red for weak
+                    } else if (strength === 3) {
+                        bar.classList.add('bg-warning'); // Yellow for fair
+                    } else if (strength === 4) {
+                        bar.classList.add('bg-info'); // Blue for good
+                    } else {
+                        bar.classList.add('bg-success'); // Green for strong
+                    }
                 } else {
-                    bar.classList.add('bg-success'); // Green for strong
+                    // Keep default bg-base-300 for inactive bars
                 }
+            });
+        }
+        
+        // Update strength text with appropriate color (only if element exists)
+        if (strengthText) {
+            strengthText.textContent = strengthLevel;
+            strengthText.classList.remove('text-error', 'text-warning', 'text-success', 'text-info');
+            
+            if (password.length === 0) {
+                strengthText.classList.add('text-base-content/70');
+            } else if (strength <= 2) {
+                strengthText.classList.add('text-error');
+            } else if (strength === 3) {
+                strengthText.classList.add('text-warning');
+            } else if (strength === 4) {
+                strengthText.classList.add('text-info');
             } else {
-                // Keep default bg-base-300 for inactive bars
+                strengthText.classList.add('text-success');
             }
-        });
-        
-        // Update strength text with appropriate color
-        strengthText.textContent = strengthLevel;
-        strengthText.classList.remove('text-error', 'text-warning', 'text-success', 'text-info');
-        
-        if (password.length === 0) {
-            strengthText.classList.add('text-base-content/70');
-        } else if (strength <= 2) {
-            strengthText.classList.add('text-error');
-        } else if (strength === 3) {
-            strengthText.classList.add('text-warning');
-        } else if (strength === 4) {
-            strengthText.classList.add('text-info');
-        } else {
-            strengthText.classList.add('text-success');
         }
         
         return strength;
