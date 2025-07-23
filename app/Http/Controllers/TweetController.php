@@ -25,7 +25,8 @@ class TweetController extends Controller
 
     function store(StoreTweetRequest $request)
     {
-        Auth::user()->tweets()->create($request->validated());
+        $tweet = Auth::user()->tweets()->create($request->validated());
+        $tweet->baseTweet()->associate($tweet)->save();
         return redirect()->back();
     }
 }
