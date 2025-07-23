@@ -2,9 +2,17 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Example Feature Test for Trends Application
+ * 
+ * This test serves as a basic template and health check for the application.
+ * It verifies that the home page loads successfully and returns a 200 status.
+ * 
+ * Note: RefreshDatabase trait can be uncommented when database tests are needed:
+ * use Illuminate\Foundation\Testing\RefreshDatabase;
+ */
 class ExampleTest extends TestCase
 {
     /**

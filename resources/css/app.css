@@ -1,13 +1,33 @@
+/**
+ * Trends Social Media Application Styles
+ * 
+ * This file contains custom CSS for the Trends social media platform built with:
+ * - TailwindCSS 4.x as the utility-first CSS framework
+ * - FlyonUI for enhanced UI components and themes
+ * - Iconify for icon system integration
+ * 
+ * Custom Features:
+ * - Multi-theme support (light, dark, black, slack, mintlify)
+ * - Password strength indicators with animated bars
+ * - Tweet interaction animations (heart beats, floating hearts)
+ * - Profile page enhancements with glass morphism effects
+ * - Loading states with shimmer animations
+ * - Responsive design patterns
+ */
+
 @import "tailwindcss";
 
+/* FlyonUI Plugin Configuration */
 @plugin "flyonui" {
   themes: light --default, dark --prefersdark, black, slack, mintlify;
 }
 
+/* Icon System Integration */
 @plugin "@iconify/tailwind4";
 @import "flyonui/variants.css";
 @source "../node_modules/flyonui/flyonui.js";
 
+/* CSS Custom Properties for Theme Consistency */
 :root {
   --color-primary: rgb(42, 97, 76);
 

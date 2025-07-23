@@ -1,4 +1,26 @@
-// Password Strength Checker
+/**
+ * Password Strength Checker Module
+ * 
+ * Provides real-time password strength validation and visual feedback for user registration.
+ * 
+ * Features:
+ * - Real-time strength calculation based on multiple criteria
+ * - Visual strength indicator with colored progress bars
+ * - Individual requirement validation with checkmarks
+ * - Smooth animations and color transitions
+ * - Accessible design with proper ARIA labels
+ * 
+ * Requirements checked:
+ * - Minimum 8 characters
+ * - At least one uppercase letter
+ * - At least one lowercase letter  
+ * - At least one number
+ * - At least one special character
+ * 
+ * Strength levels: Very Weak, Weak, Fair, Good, Strong
+ * Used on: Registration page (/register)
+ */
+
 document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const strengthBars = document.querySelectorAll('.strength-bar');
@@ -8,7 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Exit early if required elements don't exist
     if (!passwordInput || !strengthText || strengthBars.length === 0) return;
     
-    // Password strength checker function
+    /**
+     * Calculate password strength based on multiple criteria
+     * @param {string} password - The password to evaluate
+     * @returns {object} - Object containing strength score and validation results
+     */
     function checkPasswordStrength(password) {
         let strength = 0;
         let strengthLevel = 'Very Weak';

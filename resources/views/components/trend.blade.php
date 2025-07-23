@@ -1,3 +1,30 @@
+{{--
+/**
+ * Tweet Component - Trends Social Media Application
+ * 
+ * A reusable Blade component that renders individual tweets with full social media functionality.
+ * 
+ * Features:
+ * - Support for original tweets, retweets, and replies
+ * - Interactive like, retweet, and share buttons
+ * - Nested reply threads with depth control
+ * - User avatar and profile linking
+ * - Responsive design with hover animations
+ * - Time display (relative and absolute)
+ * - Visual indicators for retweets and replies
+ * 
+ * Props:
+ * @param Tweet $tweet - The tweet model instance to display
+ * @param int $depth - Current nesting depth for replies (default: 0)
+ * @param int $maxDepth - Maximum allowed nesting depth (default: 3)
+ * 
+ * Dependencies:
+ * - tweet-interactions.js for client-side functionality
+ * - User and Tweet models with proper relationships
+ * - Authentication system for interaction permissions
+ */
+--}}
+
 @props([
     'tweet', 
     'depth' => 0,
@@ -16,7 +43,6 @@
                                      alt="{{ $tweet->baseTweet->user->name }}'s avatar"
                                      class="w-full h-full object-cover transition-transform duration-200 hover:scale-110" />
                             @else
-                                <!-- Show tweet author's avatar for regular tweets -->
                                 <img src="{{ $tweet->user->avatar_url }}" 
                                      alt="{{ $tweet->user->name }}'s avatar"
                                      class="w-full h-full object-cover transition-transform duration-200 hover:scale-110" />

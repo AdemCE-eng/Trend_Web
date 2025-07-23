@@ -7,8 +7,32 @@ use App\Models\Tweet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Tweet Controller - Handles Tweet CRUD Operations
+ * 
+ * Manages all tweet-related functionality for the Trends social media platform:
+ * - Display public timeline with recent tweets
+ * - Show individual tweets with reply threads
+ * - Create new tweets and replies
+ * - Handle retweets and quote tweets
+ * 
+ * Features:
+ * - Optimized database queries with eager loading
+ * - Real-time like and retweet counts
+ * - Nested reply support with proper threading
+ * - Rate limiting for tweet creation
+ * - Authentication-aware content display
+ */
 class TweetController extends Controller
 {
+    /**
+     * Display the public timeline with latest tweets
+     * 
+     * Shows only top-level tweets (no replies) with their engagement metrics.
+     * Includes support for retweets by loading the original tweet data.
+     * 
+     * @return \Illuminate\View\View
+     */
     function index()
     {
         $tweets = Tweet::query()
@@ -21,6 +45,15 @@ class TweetController extends Controller
         return view('index', compact('tweets'));
     }
 
+    /**
+     * Display a specific tweet with its reply thread
+     * 
+     * Shows the tweet details along with all nested replies.
+     * Loads all necessary relationships for full thread display.
+     * 
+     * @param Tweet $tweet The tweet to display
+     * @return \Illuminate\View\View
+     */
     function view(Tweet $tweet)
     {
         $tweet->load(['user', 'likes', 'retweets', 'replies.user', 'replies.likes', 'replies.retweets', 'baseTweet.user'])

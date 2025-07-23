@@ -1,5 +1,19 @@
 <?php
 
+/**
+ * Web Routes for Trends Social Media Application
+ * 
+ * This file defines all HTTP routes for the web interface including:
+ * - Public routes (home, tweet view, auth pages)
+ * - Protected routes (tweet creation, profile management, social interactions)
+ * - Rate limiting for API-like endpoints
+ * 
+ * Route Organization:
+ * - Guest routes: Authentication pages
+ * - Public routes: Home timeline, individual tweet view
+ * - Authenticated routes: Tweet CRUD, social features, profile management
+ */
+
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\LikeController;
@@ -10,13 +24,28 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TweetController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes (No Authentication Required)
+|--------------------------------------------------------------------------
+| These routes are accessible to all users, including guests
+*/
+
+// Home timeline - shows all tweets
 Route::get('/', [TweetController::class, 'index'])
     ->name('home');
 
+// Individual tweet view with replies
 Route::get('/tweet/{tweet}', [TweetController::class, 'view'])
     ->name('tweet.view');
 
-// Tweet interactions (require authentication)
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes with Rate Limiting
+|--------------------------------------------------------------------------
+| These routes require user authentication and have rate limiting applied
+*/
+
 Route::middleware(['auth', 'throttle:30,1'])->group(function () {
     Route::post('/tweet/create', [TweetController::class, 'store'])
         ->name('tweet.create');
@@ -31,7 +60,6 @@ Route::middleware(['auth', 'throttle:30,1'])->group(function () {
         ->name('user.follow');
 });
 
-// Profile routes - Auth routes must come before the dynamic route
 Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return redirect()->route('profile.show', auth()->user());
@@ -47,7 +75,6 @@ Route::middleware('auth')->group(function () {
         ->name('profile.password.update');
 });
 
-// This dynamic route must come after the specific routes above
 Route::get('/profile/{user}', [ProfileController::class, 'show'])
     ->name('profile.show');
 

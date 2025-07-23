@@ -1,4 +1,28 @@
+{{--
+/**
+ * Main Application Layout - Trends Social Media Platform
+ * 
+ * This layout provides the core structure for authenticated user pages including:
+ * - Responsive navigation bar with user dropdown
+ * - Tweet composition form (floating on mobile, fixed on desktop)
+ * - User authentication state handling
+ * - Consistent styling and branding
+ * 
+ * Features:
+ * - Sticky navigation with backdrop blur effect
+ * - User profile dropdown with navigation links
+ * - Floating tweet composer with character limit
+ * - Responsive design for mobile and desktop
+ * - Toast notifications support
+ * - CSRF token management
+ * 
+ * Used by: All authenticated user pages
+ * Extends: components.layouts.default
+ */
+--}}
+
 <x-layouts.default>
+  {{-- Main Navigation Bar --}}
   <nav class="navbar bg-base-100/95 backdrop-blur-md rounded-box shadow-lg shadow-base-300/30 sticky top-2 z-50 border border-base-200/50 h-20 px-6">
     <div class="flex flex-1 items-center">
       <a class="flex items-center gap-3 link text-base-content link-neutral text-2xl font-bold no-underline hover:scale-105 transition-transform duration-200" href="{{route('home')}}">

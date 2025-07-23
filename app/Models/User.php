@@ -7,6 +7,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * User Model for Trends Social Media Application
+ * 
+ * Represents a user in the Trends social media platform with support for:
+ * - User authentication and profile management
+ * - Tweet creation and social interactions (likes, retweets, follows)
+ * - Profile customization (avatar, banner, bio, location, website)
+ * - Social relationships (following/followers)
+ * 
+ * @property int $id
+ * @property string $name Username for the user
+ * @property string $email User's email address
+ * @property string $password Hashed password
+ * @property string|null $avatar Avatar image filename
+ * @property string|null $banner Banner image filename
+ * @property string|null $bio User's biography (max 160 chars)
+ * @property string|null $location User's location
+ * @property string|null $website User's website URL
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */

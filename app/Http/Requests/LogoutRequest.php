@@ -16,14 +16,15 @@ class LogoutRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Get the validation rules that apply to the logout request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            //
+            // No validation rules needed for logout requests
+            // The request is validated through middleware and authentication
         ];
     }
 }

@@ -1,14 +1,35 @@
-// Enhanced tweet interactions for better UX
+/**
+ * Tweet Interactions JavaScript Module
+ * 
+ * Handles all client-side interactions for the Trends social media platform:
+ * - Tweet sharing functionality (native share API + clipboard fallback)
+ * - Like/unlike tweets with real-time UI updates and heart animations
+ * - Retweet functionality with rotation animations
+ * - Follow/unfollow users with optimistic UI updates
+ * - Enhanced UX with loading states, toast notifications, and smooth animations
+ * - Image loading optimization with shimmer effects
+ * - Keyboard navigation support
+ * 
+ * Dependencies: None (vanilla JavaScript)
+ * Used on: All pages with tweet components
+ */
 
-// Make shareTweet function globally available
+/**
+ * Share Tweet Functionality
+ * 
+ * Provides native sharing capabilities with graceful fallback to clipboard copy.
+ * Supports both full URLs and relative paths for tweet sharing.
+ * 
+ * @param {string} tweetUrl - The URL or path to the tweet
+ * @param {string} tweetContent - The content of the tweet to share
+ * @param {string} userName - The username of the tweet author
+ */
 window.shareTweet = function(tweetUrl, tweetContent, userName) {
-    // Check if tweetUrl already contains the full URL or just the path
+    // Construct full URL if needed (handles both relative and absolute URLs)
     const fullUrl = tweetUrl.startsWith('http') ? tweetUrl : window.location.origin + tweetUrl;
     const shareText = `"${tweetContent}" - by ${userName}`;
     
-    console.log('Tweet URL:', tweetUrl);
-    console.log('Full URL:', fullUrl);
-    
+    // Try native Web Share API first (mobile/modern browsers)
     if (navigator.share) {
         navigator.share({
             title: `Tweet by ${userName} on Trends`,
@@ -16,16 +37,24 @@ window.shareTweet = function(tweetUrl, tweetContent, userName) {
             url: fullUrl
         }).catch(err => {
             console.log('Error sharing:', err);
-            // Fallback to clipboard
+            // Gracefully fallback to clipboard copy on share failure
             copyToClipboard(fullUrl, shareText);
         });
     } else {
-        // Fallback: copy to clipboard
+        // Fallback for older browsers: copy to clipboard
         copyToClipboard(fullUrl, shareText);
     }
 };
 
-// Toggle like function
+/**
+ * Toggle Like Functionality
+ * 
+ * Handles liking/unliking tweets with optimistic UI updates and server synchronization.
+ * Features heart animation, floating heart effect, and real-time like count updates.
+ * 
+ * @param {number} tweetId - The ID of the tweet to like/unlike
+ * @param {HTMLElement} button - The like button element
+ */
 window.toggleLike = async function(tweetId, button) {
     if (!button) return;
     
