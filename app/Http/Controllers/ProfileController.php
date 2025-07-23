@@ -23,8 +23,8 @@ class ProfileController extends Controller
             
         $stats = [
             'tweets_count' => $user->tweets()->count(),
-            'following_count' => 0,
-            'followers_count' => 0,
+            'following_count' => $user->following()->count(),
+            'followers_count' => $user->followers()->count(),
         ];
 
         return view('profile.show', compact('user', 'tweets', 'stats'));
