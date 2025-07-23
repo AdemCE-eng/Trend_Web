@@ -25,6 +25,190 @@ window.shareTweet = function(tweetUrl, tweetContent, userName) {
     }
 };
 
+// Toggle like function
+window.toggleLike = async function(tweetId, button) {
+    if (!button) return;
+    
+    try {
+        // Add animation
+        button.classList.add('animate-pulse');
+        
+        const response = await fetch(`/tweet/${tweetId}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error('Failed to toggle like');
+        }
+        
+        const data = await response.json();
+        
+        // Update button state
+        const icon = button.querySelector('span[class*="heart"]');
+        const countSpan = button.querySelector('.likes-count');
+        
+        if (data.is_liked) {
+            button.classList.remove('text-base-content/60');
+            button.classList.add('text-red-500');
+            icon.className = icon.className.replace('icon-[tabler--heart]', 'icon-[tabler--heart-filled]');
+            button.dataset.liked = 'true';
+            
+            // Create floating heart animation
+            createFloatingHeart(button);
+        } else {
+            button.classList.remove('text-red-500');
+            button.classList.add('text-base-content/60');
+            icon.className = icon.className.replace('icon-[tabler--heart-filled]', 'icon-[tabler--heart]');
+            button.dataset.liked = 'false';
+        }
+        
+        // Update count
+        if (countSpan) {
+            countSpan.textContent = data.likes_count;
+        }
+        
+    } catch (error) {
+        console.error('Error toggling like:', error);
+        showToast('Failed to like tweet');
+    } finally {
+        // Remove animation
+        setTimeout(() => {
+            button.classList.remove('animate-pulse');
+        }, 300);
+    }
+};
+
+// Toggle retweet function
+window.toggleRetweet = async function(tweetId, button) {
+    if (!button) return;
+    
+    try {
+        // Add animation
+        const icon = button.querySelector('span[class*="repeat"]');
+        icon.style.transform = 'rotate(180deg)';
+        
+        const response = await fetch(`/tweet/${tweetId}/retweet`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error('Failed to toggle retweet');
+        }
+        
+        const data = await response.json();
+        
+        // Update button state
+        const countSpan = button.querySelector('.retweets-count');
+        
+        if (data.is_retweeted) {
+            button.classList.remove('text-base-content/60');
+            button.classList.add('text-green-500');
+            button.dataset.retweeted = 'true';
+        } else {
+            button.classList.remove('text-green-500');
+            button.classList.add('text-base-content/60');
+            button.dataset.retweeted = 'false';
+        }
+        
+        // Update count
+        if (countSpan) {
+            countSpan.textContent = data.retweets_count;
+        }
+        
+        // Reset icon rotation
+        setTimeout(() => {
+            icon.style.transform = '';
+        }, 300);
+        
+        showToast(data.is_retweeted ? 'Retweeted!' : 'Retweet removed');
+        
+    } catch (error) {
+        console.error('Error toggling retweet:', error);
+        showToast('Failed to retweet');
+        
+        // Reset icon rotation on error
+        const icon = button.querySelector('span[class*="repeat"]');
+        if (icon) {
+            setTimeout(() => {
+                icon.style.transform = '';
+            }, 300);
+        }
+    }
+};
+
+// Toggle follow function
+window.toggleFollow = async function(userId, button) {
+    if (!button) return;
+    
+    try {
+        // Add loading state
+        button.disabled = true;
+        button.classList.add('loading');
+        
+        const response = await fetch(`/user/${userId}/follow`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error('Failed to toggle follow');
+        }
+        
+        const data = await response.json();
+        
+        // Update button state
+        const icon = button.querySelector('.follow-icon');
+        const text = button.querySelector('.follow-text');
+        
+        if (data.is_following) {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline');
+            icon.className = icon.className.replace('icon-[tabler--user-plus]', 'icon-[tabler--user-minus]');
+            text.textContent = 'Unfollow';
+            button.dataset.following = 'true';
+            showToast('Following!');
+        } else {
+            button.classList.remove('btn-outline');
+            button.classList.add('btn-primary');
+            icon.className = icon.className.replace('icon-[tabler--user-minus]', 'icon-[tabler--user-plus]');
+            text.textContent = 'Follow';
+            button.dataset.following = 'false';
+            showToast('Unfollowed');
+        }
+        
+    } catch (error) {
+        console.error('Error toggling follow:', error);
+        showToast('Failed to update follow status');
+    } finally {
+        // Remove loading state
+        button.disabled = false;
+        button.classList.remove('loading');
+    }
+};
+
 // Helper function for copying to clipboard
 function copyToClipboard(url, text) {
     // Try to copy the URL first, then fallback to text
