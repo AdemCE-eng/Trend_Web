@@ -87,12 +87,14 @@
                                                     Edit Profile
                                                 </a>
                                             @else
-                                                <button class="btn btn-outline rounded-full px-6 py-2 shadow-lg hover:shadow-xl transition-all duration-200">
-                                                    <span class="icon-[tabler--user-plus] size-4 mr-2"></span>
-                                                    Follow
-                                                </button>
-                                                <button class="btn btn-ghost rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-200">
-                                                    <span class="icon-[tabler--message-circle] size-5"></span>
+                                                @php
+                                                    $isFollowing = auth()->user()->isFollowing($user);
+                                                @endphp
+                                                <button class="btn {{ $isFollowing ? 'btn-outline' : 'btn-primary' }} rounded-full px-6 py-2 shadow-lg hover:shadow-xl transition-all duration-200"
+                                                        onclick="toggleFollow({{ $user->getKey() }}, this)"
+                                                        data-following="{{ $isFollowing ? 'true' : 'false' }}">
+                                                    <span class="icon-[tabler--{{ $isFollowing ? 'user-minus' : 'user-plus' }}] size-4 mr-2 follow-icon"></span>
+                                                    <span class="follow-text">{{ $isFollowing ? 'Unfollow' : 'Follow' }}</span>
                                                 </button>
                                             @endif
                                         @endauth
