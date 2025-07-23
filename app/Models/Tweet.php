@@ -11,7 +11,6 @@ class Tweet extends Model
     
     protected $fillable = [
         'content',
-        'base_tweet_id',
         'parent_tweet_id'
     ];
     
