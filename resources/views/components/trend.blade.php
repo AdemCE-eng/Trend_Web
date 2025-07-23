@@ -10,9 +10,17 @@
                 <div class="flex-shrink-0">
                     <div class="relative">
                         <div class="size-12 rounded-full ring-2 ring-gray-100 overflow-hidden shadow-sm">
-                            <img src="{{ $tweet->user->avatar_url }}" 
-                                 alt="{{ $tweet->user->name }}'s avatar"
-                                 class="w-full h-full object-cover transition-transform duration-200 hover:scale-110" />
+                            @if($tweet->content === null && $tweet->baseTweet)
+                                <!-- Show original tweet author's avatar for retweets -->
+                                <img src="{{ $tweet->baseTweet->user->avatar_url }}" 
+                                     alt="{{ $tweet->baseTweet->user->name }}'s avatar"
+                                     class="w-full h-full object-cover transition-transform duration-200 hover:scale-110" />
+                            @else
+                                <!-- Show tweet author's avatar for regular tweets -->
+                                <img src="{{ $tweet->user->avatar_url }}" 
+                                     alt="{{ $tweet->user->name }}'s avatar"
+                                     class="w-full h-full object-cover transition-transform duration-200 hover:scale-110" />
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -21,23 +29,53 @@
                 <div class="flex-1 min-w-0 space-y-3">
                     <!-- User info with timestamp -->
                     <div class="flex items-center justify-between">
-                        <a href="{{ route('profile.show', $tweet->user) }}" class="group/user flex items-center gap-2 hover:underline">
-                            <span class="font-semibold text-base-content group-hover/user:text-primary transition-colors">
-                                {{ $tweet->user->name }}
-                            </span>
-                        </a>
-                        <time class="text-xs text-base-content/40 hidden sm:block">
-                            {{ $tweet->created_at->diffForHumans() }}
-                        </time>
+                        @if($tweet->content === null && $tweet->baseTweet)
+                            <!-- Show original tweet author info for retweets -->
+                            <a href="{{ route('profile.show', $tweet->baseTweet->user) }}" class="group/user flex items-center gap-2 hover:underline">
+                                <span class="font-semibold text-base-content group-hover/user:text-primary transition-colors">
+                                    {{ $tweet->baseTweet->user->name }}
+                                </span>
+                            </a>
+                            <time class="text-xs text-base-content/40 hidden sm:block">
+                                {{ $tweet->baseTweet->created_at->diffForHumans() }}
+                            </time>
+                        @else
+                            <!-- Show tweet author info for regular tweets -->
+                            <a href="{{ route('profile.show', $tweet->user) }}" class="group/user flex items-center gap-2 hover:underline">
+                                <span class="font-semibold text-base-content group-hover/user:text-primary transition-colors">
+                                    {{ $tweet->user->name }}
+                                </span>
+                            </a>
+                            <time class="text-xs text-base-content/40 hidden sm:block">
+                                {{ $tweet->created_at->diffForHumans() }}
+                            </time>
+                        @endif
                     </div>
                     
                     <!-- Tweet content-->
-                    <a href="{{ route('tweet.view',$tweet->baseTweet->id) }}" 
-                       class="block group/content">
-                        <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
-                            {{ $tweet->content }}
-                        </p>
-                    </a>
+                    <div class="block group/content">
+                        @if($tweet->content === null && $tweet->baseTweet)
+                            <!-- This is a retweet - show retweeter info and original content -->
+                            <div class="mb-2 text-sm text-base-content/60 flex items-center gap-1">
+                                <span class="icon-[tabler--repeat] size-4"></span>
+                                <span>{{ $tweet->user->name }} retweeted</span>
+                            </div>
+                            <a href="{{ route('tweet.view', $tweet->baseTweet->getKey()) }}" 
+                               class="block group/content">
+                                <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
+                                    {{ $tweet->baseTweet->content }}
+                                </p>
+                            </a>
+                        @else
+                            <!-- Regular tweet or quote tweet -->
+                            <a href="{{ route('tweet.view', $tweet->baseTweet ? $tweet->baseTweet->getKey() : $tweet->getKey()) }}" 
+                               class="block group/content">
+                                <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
+                                    {{ $tweet->content }}
+                                </p>
+                            </a>
+                        @endif
+                    </div>
                     
                     <!-- Action buttons-->
                     <div class="flex items-center justify-between pt-3 mt-2">
@@ -61,23 +99,40 @@
 
                         <div class="flex items-center gap-1">
                             <!-- Like button with heart animation -->
-                            <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/60 hover:text-red-500 hover:bg-red-50 transition-all duration-200 group/like"
-                                    title="Like this tweet">
-                                <span class="icon-[tabler--heart] size-4 group-hover/like:scale-110 transition-transform"></span>
-                                <span class="hidden sm:inline text-xs">24</span>
+                            <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 group/like {{ $tweet->isLikedBy(auth()->user()) ? 'text-red-500' : 'text-base-content/60 hover:text-red-500' }} hover:bg-red-50"
+                                    title="Like this tweet"
+                                    onclick="toggleLike({{ $tweet->getKey() }}, this)"
+                                    data-liked="{{ $tweet->isLikedBy(auth()->user()) ? 'true' : 'false' }}">
+                                <span class="icon-[tabler--heart{{ $tweet->isLikedBy(auth()->user()) ? '-filled' : '' }}] size-4 group-hover/like:scale-110 transition-transform"></span>
+                                <span class="hidden sm:inline text-xs likes-count">{{ $tweet->likes_count }}</span>
                             </button>
                             
                             <!-- Retweet button -->
-                            <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/60 hover:text-green-500 hover:bg-green-50 transition-all duration-200 group/retweet"
-                                    title="Retweet">
+                            @php
+                                // Check if user retweeted the ORIGINAL tweet (not this retweet)
+                                $originalTweet = $tweet->baseTweet ? $tweet->baseTweet : $tweet;
+                                $userRetweeted = auth()->user() ? 
+                                    \App\Models\Tweet::where('user_id', auth()->user()->getKey())
+                                        ->where('base_tweet_id', $originalTweet->getKey())
+                                        ->whereNull('content')
+                                        ->exists() 
+                                    : false;
+                            @endphp
+                            <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 group/retweet {{ $userRetweeted ? 'text-green-500' : 'text-base-content/60 hover:text-green-500' }} hover:bg-green-50"
+                                    title="Retweet"
+                                    onclick="toggleRetweet({{ $tweet->getKey() }}, this)"
+                                    data-retweeted="{{ $userRetweeted ? 'true' : 'false' }}">
                                 <span class="icon-[tabler--repeat] size-4 group-hover/retweet:scale-110 transition-transform"></span>
-                                <span class="hidden sm:inline text-xs">12</span>
+                                <span class="hidden sm:inline text-xs retweets-count">{{ $originalTweet->retweets_count }}</span>
                             </button>
                             
                             <!-- Share button -->
                             <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/60 hover:text-blue-500 hover:bg-blue-50 transition-all duration-200 group/share"
                                     title="Share this tweet"
-                                    onclick="shareTweet('{{ route('tweet.view', $tweet->baseTweet ? $tweet->baseTweet->id : $tweet->id) }}', '{{ addslashes($tweet->content) }}', '{{ addslashes($tweet->user->name) }}')">
+                                    data-tweet-url="{{ route('tweet.view', $tweet->baseTweet ? $tweet->baseTweet->getKey() : $tweet->getKey()) }}"
+                                    data-tweet-content="{{ $tweet->content === null && $tweet->baseTweet ? $tweet->baseTweet->content : $tweet->content }}"
+                                    data-author-name="{{ $tweet->content === null && $tweet->baseTweet ? $tweet->baseTweet->user->name : $tweet->user->name }}"
+                                    onclick="shareTweet(this.dataset.tweetUrl, this.dataset.tweetContent, this.dataset.authorName)">
                                 <span class="icon-[tabler--share] size-4 group-hover/share:scale-110 transition-transform"></span>
                                 <span class="hidden sm:inline text-xs">Share</span>
                             </button>
@@ -87,7 +142,11 @@
                     <!-- Mobile timestamp -->
                     <div class="sm:hidden">
                         <time class="text-xs text-base-content/40">
-                            {{ $tweet->created_at->diffForHumans() }}
+                            @if($tweet->content === null && $tweet->baseTweet)
+                                {{ $tweet->baseTweet->created_at->diffForHumans() }}
+                            @else
+                                {{ $tweet->created_at->diffForHumans() }}
+                            @endif
                         </time>
                     </div>
                 </div>
