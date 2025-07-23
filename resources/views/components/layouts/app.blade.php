@@ -11,7 +11,7 @@
       <button id="dropdown-scrollable" type="button" class="dropdown-toggle flex items-center" aria-haspopup="menu"
         aria-expanded="false" aria-label="Dropdown">
         <div class="avatar">
-        <div class="size-9.5 rounded-full">
+        <div class="size-10 rounded-full">
           <img src="{{ Auth::user()->avatar_url }}" alt="avatar" />
         </div>
         </div>
@@ -30,23 +30,18 @@
         </div>
         </li>
         <li>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="{{ route('profile.show', Auth::user()) }}">
           <span class="icon-[tabler--user]"></span>
           My Profile
         </a>
         </li>
         <li>
-        <a class="dropdown-item" href="#">
+        <a class="dropdown-item" href="{{ route('profile.edit') }}">
           <span class="icon-[tabler--settings]"></span>
           Settings
         </a>
         </li>
         <li>
-        <a class="dropdown-item" href="#">
-          <span class="icon-[tabler--receipt-rupee]"></span>
-          Billing
-        </a>
-        </li>
         <li>
         <a class="dropdown-item" href="#">
           <span class="icon-[tabler--help-triangle]"></span>
@@ -85,6 +80,7 @@
   <div class="fixed bottom-4 left-4 right-4 mx-auto max-w-2xl">
     <form method="post" action="{{ route('tweet.create') }}">
       @csrf
+      <input type="hidden" name="parent_tweet_id" value="{{ request()->tweet?->id }}">
       <div class="bg-base-100 border border-base-200 rounded-xl shadow-lg p-4 backdrop-blur-sm">
         <div class="flex flex-col gap-3">
           <div class="textarea-floating">
