@@ -22,6 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'banner',
+        'bio',
+        'location',
+        'website',
     ];
 
     /**
@@ -48,12 +52,20 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's avatar URL with fallback to default
+     * Get the user's avatar URL
      */
     public function getAvatarUrlAttribute()
     {
-        if ($this->attributes['avatar'] ?? null) {
-            return asset('storage/' . $this->attributes['avatar']);
+        if (!empty($this->attributes['avatar'])) {
+            // Handle both full path (avatars/filename.ext) and just filename
+            $avatarPath = $this->attributes['avatar'];
+            
+            // If it doesn't contain 'avatars/', prepend it
+            if (!str_contains($avatarPath, 'avatars/')) {
+                $avatarPath = 'avatars/' . $avatarPath;
+            }
+            
+            return asset('storage/' . $avatarPath);
         }
 
         return asset('images/default-avatar.png');
@@ -62,5 +74,49 @@ class User extends Authenticatable
     public function tweets()
     {
         return $this->hasMany(Tweet::class);
+    }
+
+    /**
+     * Get users that this user is following
+     */
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+    }
+
+    /**
+     * Get users that follow this user
+     */
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+    }
+
+    /**
+     * Check if this user is following another user
+     */
+    public function isFollowing(User $user)
+    {
+        return $this->following()->where('following_id', $user->getKey())->exists();
+    }
+
+    /**
+     * Get the user's banner URL
+     */
+    public function getBannerUrlAttribute()
+    {
+        if (!empty($this->attributes['banner'])) {
+            // Handle both full path (banners/filename.ext) and just filename
+            $bannerPath = $this->attributes['banner'];
+            
+            // If it doesn't contain 'banners/', prepend it
+            if (!str_contains($bannerPath, 'banners/')) {
+                $bannerPath = 'banners/' . $bannerPath;
+            }
+            
+            return asset('storage/' . $bannerPath);
+        }
+
+        return asset('images/default-banner.jpg');
     }
 }
