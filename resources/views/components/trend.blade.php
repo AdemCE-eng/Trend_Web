@@ -17,7 +17,7 @@
                     </div>
                 </a>
                 
-                <a href="{{ route('tweet.view',$tweet->id) }}">
+                <a href="{{ route('tweet.view',$tweet->baseTweet->id) }}">
                     <p class="mb-4 break-words overflow-hidden">{{ $tweet->content }}</p>
                 </a>
                 
