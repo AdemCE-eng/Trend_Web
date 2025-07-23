@@ -81,7 +81,7 @@ class User extends Authenticatable
      */
     public function following()
     {
-        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followee_id');
     }
 
     /**
@@ -89,7 +89,7 @@ class User extends Authenticatable
      */
     public function followers()
     {
-        return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+        return $this->belongsToMany(User::class, 'follows', 'followee_id', 'follower_id');
     }
 
     /**
@@ -97,7 +97,23 @@ class User extends Authenticatable
      */
     public function isFollowing(User $user)
     {
-        return $this->following()->where('following_id', $user->getKey())->exists();
+        return $this->following()->where('followee_id', $user->getKey())->exists();
+    }
+
+    /**
+     * Get the likes made by this user
+     */
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    /**
+     * Get the tweets liked by this user
+     */
+    public function likedTweets()
+    {
+        return $this->belongsToMany(Tweet::class, 'likes');
     }
 
     /**
