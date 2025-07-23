@@ -23,7 +23,8 @@ class StoreTweetRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content'=>['required','max:10000']
+            'content'=>['required','max:10000'],
+            'parent_tweet_id'=>['nullable','exists:tweets,id'],
         ];
     }
 }
