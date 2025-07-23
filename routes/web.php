@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ProfileController;
@@ -14,8 +16,20 @@ Route::get('/', [TweetController::class, 'index'])
 Route::get('/tweet/{tweet}', [TweetController::class, 'view'])
     ->name('tweet.view');
 
-Route::post('/tweet/create', [TweetController::class, 'store'])
-    ->name('tweet.create');
+// Tweet interactions (require authentication)
+Route::middleware(['auth', 'throttle:30,1'])->group(function () {
+    Route::post('/tweet/create', [TweetController::class, 'store'])
+        ->name('tweet.create');
+        
+    Route::post('/tweet/{tweet}/like', [LikeController::class, 'toggle'])
+        ->name('tweet.like');
+    
+    Route::post('/tweet/{tweet}/retweet', [TweetController::class, 'retweet'])
+        ->name('tweet.retweet');
+    
+    Route::post('/user/{user}/follow', [FollowController::class, 'toggle'])
+        ->name('user.follow');
+});
 
 // Profile routes - Auth routes must come before the dynamic route
 Route::middleware('auth')->group(function () {
@@ -44,7 +58,12 @@ Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
-Route::post('/login', [LoginController::class, 'store']);
+Route::post('/login', [LoginController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('login.store');
+
+Route::post('/register', [RegisterController::class, 'store'])
+    ->middleware('throttle:3,1');
 
 Route::post('/logout', LogoutController::class)
     ->name('logout');
