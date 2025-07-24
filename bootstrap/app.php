@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add rate limiting for API routes
         $middleware->throttleApi();
         
+        // Add middleware to handle POST size errors
+        $middleware->web(prepend: \App\Http\Middleware\HandlePostSizeError::class);
+        
         // Add rate limiting for auth routes
         $middleware->alias([
             'throttle.login' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':5,1',
