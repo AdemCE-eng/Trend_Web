@@ -80,7 +80,7 @@
                     
                     <!-- Tweet content-->
                     <div class="block group/content">
-                        @if($tweet->content === null && $tweet->baseTweet)
+                        @if($tweet->content === null && $tweet->baseTweet && $tweet->user->id !== $tweet->baseTweet->user->id)
                             <!-- This is a retweet - show retweeter info and original content -->
                             <div class="mb-2 text-sm text-base-content/60 flex items-center gap-1">
                                 <span class="icon-[tabler--repeat] size-4"></span>
@@ -88,17 +88,39 @@
                             </div>
                             <a href="{{ route('tweet.view', $tweet->baseTweet->getKey()) }}" 
                                class="block group/content">
-                                <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
-                                    {{ $tweet->baseTweet->content }}
-                                </p>
+                                @if($tweet->baseTweet->content)
+                                    <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
+                                        {{ $tweet->baseTweet->content }}
+                                    </p>
+                                @endif
+                                
+                                <!-- Display image for retweeted content -->
+                                @if($tweet->baseTweet->image_path)
+                                    <div class="mt-3">
+                                        <img src="{{ $tweet->baseTweet->image_url }}" 
+                                             alt="Tweet image" 
+                                             class="max-w-full h-auto rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200" />
+                                    </div>
+                                @endif
                             </a>
                         @else
                             <!-- Regular tweet or quote tweet -->
                             <a href="{{ route('tweet.view', $tweet->baseTweet ? $tweet->baseTweet->getKey() : $tweet->getKey()) }}" 
                                class="block group/content">
-                                <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
-                                    {{ $tweet->content }}
-                                </p>
+                                @if($tweet->content)
+                                    <p class="text-base-content leading-relaxed break-words overflow-hidden group-hover/content:text-base-content/90 transition-colors">
+                                        {{ $tweet->content }}
+                                    </p>
+                                @endif
+                                
+                                <!-- Display image for regular content -->
+                                @if($tweet->image_path)
+                                    <div class="mt-3">
+                                        <img src="{{ $tweet->image_url }}" 
+                                             alt="Tweet image" 
+                                             class="max-w-full h-auto rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200" />
+                                    </div>
+                                @endif
                             </a>
                         @endif
                     </div>
@@ -125,12 +147,17 @@
 
                         <div class="flex items-center gap-1">
                             <!-- Like button with heart animation -->
-                            <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 group/like {{ $tweet->isLikedBy(auth()->user()) ? 'text-red-500' : 'text-base-content/60 hover:text-red-500' }} hover:bg-red-50"
+                            @php
+                                // Check if user liked the ORIGINAL tweet (not this retweet)
+                                $originalTweet = $tweet->baseTweet ? $tweet->baseTweet : $tweet;
+                                $userLiked = $originalTweet->isLikedBy(auth()->user());
+                            @endphp
+                            <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 group/like {{ $userLiked ? 'text-red-500' : 'text-base-content/60 hover:text-red-500' }} hover:bg-red-50"
                                     title="Like this tweet"
                                     onclick="toggleLike({{ $tweet->getKey() }}, this)"
-                                    data-liked="{{ $tweet->isLikedBy(auth()->user()) ? 'true' : 'false' }}">
-                                <span class="icon-[tabler--heart{{ $tweet->isLikedBy(auth()->user()) ? '-filled' : '' }}] size-4 group-hover/like:scale-110 transition-transform"></span>
-                                <span class="hidden sm:inline text-xs likes-count">{{ $tweet->likes_count }}</span>
+                                    data-liked="{{ $userLiked ? 'true' : 'false' }}">
+                                <span class="icon-[tabler--heart{{ $userLiked ? '-filled' : '' }}] size-4 group-hover/like:scale-110 transition-transform"></span>
+                                <span class="hidden sm:inline text-xs likes-count">{{ $originalTweet->likes_count }}</span>
                             </button>
                             
                             <!-- Retweet button -->
