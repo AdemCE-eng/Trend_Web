@@ -1,4 +1,4 @@
-<x-layouts.auth>
+<x-layouts.auth title="Sign In">
     <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-6">
     <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8 w-full">
       <div class="bg-base-100 shadow-base-300/20 z-1 w-full max-w-md space-y-4 rounded-xl p-6 shadow-md lg:p-6">
