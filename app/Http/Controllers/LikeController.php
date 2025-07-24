@@ -20,25 +20,28 @@ class LikeController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
+        // Find the original tweet (in case this is a retweet)
+        $originalTweet = $tweet->baseTweet ? $tweet->baseTweet : $tweet;
+
         $like = Like::where('user_id', $user->getKey())
-                   ->where('tweet_id', $tweet->id)
+                   ->where('tweet_id', $originalTweet->id)
                    ->first();
 
         if ($like) {
-            // Unlike the tweet
+            // Unlike the original tweet
             $like->delete();
             $isLiked = false;
         } else {
-            // Like the tweet
+            // Like the original tweet
             Like::create([
                 'user_id' => $user->getKey(),
-                'tweet_id' => $tweet->id
+                'tweet_id' => $originalTweet->id
             ]);
             $isLiked = true;
         }
 
-        // Get updated like count
-        $likesCount = $tweet->likes()->count();
+        // Get updated like count from the original tweet
+        $likesCount = $originalTweet->likes()->count();
 
         return response()->json([
             'success' => true,
