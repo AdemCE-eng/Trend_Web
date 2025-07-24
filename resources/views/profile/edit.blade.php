@@ -1,4 +1,4 @@
-<x-layouts.app>
+<x-layouts.app title="Edit Profile">
     <div class="min-h-screen bg-base-200/30 py-8">
         <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header -->
