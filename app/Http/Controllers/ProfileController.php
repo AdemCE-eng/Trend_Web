@@ -35,7 +35,7 @@ class ProfileController extends Controller
      */
     public function edit()
     {
-        return view('profile.edit', ['user' => Auth::user()]);
+        return view('profile.edit', data: ['user' => Auth::user()]);
     }
 
     /**
@@ -46,7 +46,7 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:users,name,' . $user->getKey()],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->getKey()],
             'bio' => ['nullable', 'string', 'max:160'],
             'location' => ['nullable', 'string', 'max:100'],
@@ -144,7 +144,22 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password' => [
+                'required',
+                'string',
+                'max:255',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
+        ], [
+            'current_password.required' => 'Current password is required.',
+            'current_password.current_password' => 'The current password is incorrect.',
+            'password.required' => 'New password is required.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.max' => 'Password cannot exceed 255 characters.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
         ]);
 
         $request->user()->update([
