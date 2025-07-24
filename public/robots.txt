@@ -1,2 +1,14 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Prevent crawling of admin/auth areas
+Disallow: /login
+Disallow: /register
+Disallow: /logout
+Disallow: /profile/edit
+
+# Allow crawling of public profiles and tweets
+Allow: /profile/
+Allow: /tweet/
+
+Sitemap: /sitemap.xml
