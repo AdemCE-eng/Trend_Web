@@ -1,4 +1,4 @@
-<x-layouts.auth>
+<x-layouts.auth title="Join Trends">
   <div class="drop-shadow-2xl flex h-auto min-h-screen items-center justify-center overflow-x-hidden py-6">
     <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div class="bg-base-100 shadow-base-300/20 z-1 w-full space-y-4 rounded-xl p-6 shadow-md sm:min-w-md lg:p-6">
