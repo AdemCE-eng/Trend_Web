@@ -64,7 +64,17 @@ class TweetController extends Controller
 
     function store(StoreTweetRequest $request)
     {
-        $tweet = Auth::user()->tweets()->create($request->validated());
+        $data = $request->validated();
+        
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('tweets', $imageName, 'public');
+            $data['image_path'] = $imagePath;
+        }
+        
+        $tweet = Auth::user()->tweets()->create($data);
         if ($tweet->baseTweet()->exists()) {
             $tweet->baseTweet()->associate($tweet->parentTweet->baseTweet->getKey())->save();
         } else {
@@ -84,11 +94,6 @@ class TweetController extends Controller
             if (!$user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
-
-            // Optional: Prevent self-retweets (remove these lines if you want to allow self-retweets like Twitter)
-            // if ($user->getKey() === $tweet->user->getKey()) {
-            //     return response()->json(['error' => 'Cannot retweet your own tweet'], 400);
-            // }
 
             // Find the original tweet (in case this is a retweet of a retweet)
             $originalTweet = $tweet->baseTweet ? $tweet->baseTweet : $tweet;
