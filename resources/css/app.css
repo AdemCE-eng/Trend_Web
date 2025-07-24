@@ -13,6 +13,7 @@
  * - Profile page enhancements with glass morphism effects
  * - Loading states with shimmer animations
  * - Responsive design patterns
+ * - Enhanced tab visibility and branding
  */
 
 @import "tailwindcss";
@@ -34,6 +35,11 @@
   --radius-selector: 3rem;
   --radius-field: 1rem;
   --radius-box: 0.5rem;
+}
+
+/* Enhanced tab visibility - ensure proper contrast */
+:root {
+  color-scheme: light dark;
 }
 
 html {
