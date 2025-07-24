@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * 
  * @property int $id
  * @property string|null $content Tweet text content (null for pure retweets)
+ * @property string|null $image_path Path to uploaded image
  * @property int|null $parent_tweet_id ID of the tweet being replied to
  * @property int|null $base_tweet_id ID of the original tweet (for retweets)
  * @property int $user_id ID of the user who created this tweet
@@ -30,6 +31,7 @@ class Tweet extends Model
     
     protected $fillable = [
         'content',
+        'image_path',
         'parent_tweet_id',
         'base_tweet_id',
         'user_id'
@@ -122,5 +124,16 @@ class Tweet extends Model
             return $this->attributes['retweets_count'];
         }
         return $this->retweets()->count();
+    }
+
+    /**
+     * Get the full URL for the tweet image.
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_path) {
+            return asset('storage/' . $this->image_path);
+        }
+        return null;
     }
 }
