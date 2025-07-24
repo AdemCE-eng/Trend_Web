@@ -1,4 +1,4 @@
-<x-layouts.app>
+<x-layouts.app :title="$user->name . ' (@' . $user->name . ')'">
     <!-- Preload critical images to prevent flickering -->
     @if($user->banner)
         <link rel="preload" as="image" href="{{ $user->banner_url }}">
