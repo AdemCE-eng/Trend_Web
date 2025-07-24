@@ -21,7 +21,12 @@
  */
 --}}
 
-<x-layouts.default>
+@php
+    // Set default page title if not provided
+    $pageTitle = $title ?? 'Home';
+@endphp
+
+<x-layouts.default :title="$pageTitle">
   {{-- Main Navigation Bar --}}
   <nav class="navbar bg-base-100/95 backdrop-blur-md rounded-box shadow-lg shadow-base-300/30 sticky top-2 z-50 border border-base-200/50 h-20 px-6">
     <div class="flex flex-1 items-center">
@@ -102,9 +107,9 @@
   </div>
   @if (Auth::check() && !request()->routeIs('profile.*'))
   <div class="fixed bottom-4 left-4 right-4 mx-auto max-w-2xl">
-    <form method="post" action="{{ route('tweet.create') }}">
+    <form method="post" action="{{ route('tweet.create') }}" enctype="multipart/form-data">
       @csrf
-      <input type="hidden" name="parent_tweet_id" value="{{ request()->tweet?->id }}">
+      <input type="hidden" name="parent_tweet_id" value="{{ request()->get('tweet_id', '') }}">
       <div class="bg-base-100 border border-base-200 rounded-xl shadow-lg p-4 backdrop-blur-sm">
         <div class="flex flex-col gap-3">
           <div class="textarea-floating">
@@ -119,16 +124,43 @@
                 {{ $message }}
               </div>
             @enderror
+            @error('image')
+              <div class="text-error text-sm mt-1">
+                <span class="icon-[tabler--alert-circle] mr-1"></span>
+                {{ $message }}
+              </div>
+            @enderror
           </div>
+          
+          <!-- Image Preview -->
+          <div id="imagePreview" class="hidden">
+            <div class="relative" style="min-height: 12rem;">
+              <img id="previewImg" src="" alt="Image preview" class="max-w-full h-48 object-cover rounded-lg border border-base-200">
+              <button type="button" id="removeImage" style="top: 0.5rem; right: 0.5rem; z-index: 20;" class="absolute w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200">
+                <span class="icon-[tabler--x] text-lg font-bold"></span>
+              </button>
+            </div>
+            <div id="fileInfo" class="text-xs text-base-content/60 mt-1 hidden"></div>
+          </div>
+          
           <div class="flex justify-between items-center">
             <div class="flex items-center gap-2 text-base-content/50">
-              <span class="icon-[tabler--photo] text-lg cursor-pointer hover:text-primary transition-colors"></span>
-              <span
-                class="icon-[tabler--mood-smile] text-lg cursor-pointer hover:text-primary transition-colors"></span>
-              <span class="icon-[tabler--map-pin] text-lg cursor-pointer hover:text-primary transition-colors"></span>
+              <!-- Photo Upload Button -->
+              <label for="imageUpload" class="icon-[tabler--photo] text-lg cursor-pointer hover:text-primary transition-colors" title="Add photo (max 10MB)">
+              </label>
+              <input type="file" id="imageUpload" name="image" accept="image/*" class="hidden">
+              
+              <!-- Emoji Button -->
+              <button type="button" id="emojiBtn" class="icon-[tabler--mood-smile] text-lg cursor-pointer hover:text-primary transition-colors" title="Add emoji">
+              </button>
+              
+              <!-- Location Button -->
+              <button type="button" id="locationBtn" class="icon-[tabler--map-pin] text-lg cursor-pointer hover:text-primary transition-colors" title="Add location">
+              </button>
             </div>
             <div class="flex items-center gap-3">
-              <button type="submit" class="btn btn-primary btn-sm px-6 hover:btn-primary-focus transition-all duration-200">
+              <span id="charCounter" class="text-sm text-base-content/50">0/10000</span>
+              <button type="submit" class="btn btn-primary btn-sm px-6 hover:btn-primary-focus transition-all duration-200" onclick="return validateSubmission()">
                 <span class="icon-[tabler--send] mr-1"></span>
                 Tweet
               </button>
@@ -138,5 +170,191 @@
       </div>
     </form>
   </div>
+
+  <!-- JavaScript for tweet composer functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const textarea = document.getElementById('textareaFloating');
+      const charCounter = document.getElementById('charCounter');
+      const imageUpload = document.getElementById('imageUpload');
+      const imagePreview = document.getElementById('imagePreview');
+      const previewImg = document.getElementById('previewImg');
+      const removeImageBtn = document.getElementById('removeImage');
+      const emojiBtn = document.getElementById('emojiBtn');
+      const locationBtn = document.getElementById('locationBtn');
+
+      // Character counter
+      textarea.addEventListener('input', function() {
+        const count = this.value.length;
+        charCounter.textContent = `${count}/10000`;
+        
+        if (count > 9000) {
+          charCounter.classList.add('text-warning');
+        } else if (count > 9500) {
+          charCounter.classList.add('text-error');
+        } else {
+          charCounter.classList.remove('text-warning', 'text-error');
+        }
+      });
+
+      // Image upload preview
+      imageUpload.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+          // Check file size (10MB = 10 * 1024 * 1024 bytes)
+          const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+          
+          // Check file type first
+          const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+          if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPEG, PNG, GIF, or WebP).');
+            this.value = ''; // Clear the input
+            return;
+          }
+
+          if (file.size > maxSize) {
+            const fileSizeMB = (file.size / 1024 / 1024).toFixed(1);
+            alert(`File size (${fileSizeMB}MB) exceeds the 10MB limit. Please choose a smaller image.`);
+            this.value = ''; // Clear the input
+            return;
+          }
+
+          displayImagePreview(file);
+        }
+      });
+
+      // Function to display image preview
+      function displayImagePreview(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          imagePreview.classList.remove('hidden');
+          
+          // Show file info
+          const fileInfo = document.getElementById('fileInfo');
+          if (fileInfo) {
+            fileInfo.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+            fileInfo.classList.remove('hidden');
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Function to create file info element (no longer needed but kept for compatibility)
+      function createFileInfo() {
+        return document.getElementById('fileInfo');
+      }
+
+      // Remove image
+      removeImageBtn.addEventListener('click', function() {
+        imageUpload.value = '';
+        imagePreview.classList.add('hidden');
+        previewImg.src = '';
+        
+        // Hide file info
+        const fileInfo = document.getElementById('fileInfo');
+        if (fileInfo) {
+          fileInfo.classList.add('hidden');
+          fileInfo.textContent = '';
+        }
+      });
+
+      // Emoji button (basic emoji insertion)
+      emojiBtn.addEventListener('click', function() {
+        // Create emoji picker dropdown
+        const existingPicker = document.getElementById('emojiPicker');
+        if (existingPicker) {
+          existingPicker.remove();
+          return;
+        }
+
+        const emojiPicker = document.createElement('div');
+        emojiPicker.id = 'emojiPicker';
+        emojiPicker.className = 'absolute bottom-12 left-0 bg-base-100 border border-base-200 rounded-lg shadow-lg p-3 z-50 max-w-xs';
+        emojiPicker.innerHTML = `
+          <div class="grid grid-cols-8 gap-1">
+            ${['😀', '😂', '🥰', '😍', '🤔', '😭', '🥺', '😤', '🤯', '🥳', '😴', '🤤', '🤢', '🤮', '🤧', '😇', '🤠', '🥸', '🤡', '🥶', '🥵', '😱', '🤗', '🤫', '🤭', '🫡', '🤨', '😐', '😑', '🫤', '😔', '😟', '😕', '🙁', '☹️', '😖', '😫', '😩', '🥺', '😢', '😥', '😪', '😓', '😰', '😨', '😧', '😦', '😮', '😯', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '🤒', '🤕'].map(emoji => 
+              `<button type="button" class="hover:bg-base-200 p-1 rounded text-lg" onclick="insertEmoji('${emoji}')">${emoji}</button>`
+            ).join('')}
+          </div>
+        `;
+        this.parentElement.appendChild(emojiPicker);
+
+        // Close picker when clicking outside
+        setTimeout(() => {
+          document.addEventListener('click', function closeEmojiPicker(e) {
+            if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+              emojiPicker.remove();
+              document.removeEventListener('click', closeEmojiPicker);
+            }
+          });
+        }, 100);
+      });
+
+      // Function to insert emoji
+      window.insertEmoji = function(emoji) {
+        const cursorPos = textarea.selectionStart;
+        const textBefore = textarea.value.substring(0, cursorPos);
+        const textAfter = textarea.value.substring(cursorPos);
+        
+        textarea.value = textBefore + emoji + textAfter;
+        textarea.focus();
+        textarea.setSelectionRange(cursorPos + emoji.length, cursorPos + emoji.length);
+        
+        // Trigger input event to update character counter
+        textarea.dispatchEvent(new Event('input'));
+        
+        // Close emoji picker
+        document.getElementById('emojiPicker')?.remove();
+      };
+
+      // Function to validate form submission
+      window.validateSubmission = function() {
+        const content = textarea.value.trim();
+        const hasImage = imageUpload.files.length > 0;
+        
+        if (!content && !hasImage) {
+          alert('Please enter some text or select an image to tweet.');
+          return false;
+        }
+        
+        if (hasImage) {
+          const file = imageUpload.files[0];
+          const maxSize = 10 * 1024 * 1024; // 10MB
+          
+          if (file.size > maxSize) {
+            alert(`Image file is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Please choose a smaller image (max 10MB).`);
+            return false;
+          }
+        }
+        
+        return true;
+      };
+
+      // Location button (simple location text insertion)
+      locationBtn.addEventListener('click', function() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            const locationText = ` 📍 Location: ${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`;
+            
+            const cursorPos = textarea.selectionStart;
+            const textBefore = textarea.value.substring(0, cursorPos);
+            const textAfter = textarea.value.substring(cursorPos);
+            
+            textarea.value = textBefore + locationText + textAfter;
+            textarea.focus();
+            textarea.setSelectionRange(cursorPos + locationText.length, cursorPos + locationText.length);
+            
+            // Trigger input event to update character counter
+            textarea.dispatchEvent(new Event('input'));
+          }, function() {
+            alert('Location access denied or unavailable');
+          });
+        } else {
+          alert('Geolocation is not supported by this browser');
+        }
+      });
+    });
+  </script>
   @endif
 </x-layouts.default>
