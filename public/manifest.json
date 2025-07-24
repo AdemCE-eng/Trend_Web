@@ -1,0 +1,27 @@
+{
+  "name": "Trends - Social Media Platform",
+  "short_name": "Trends",
+  "description": "Connect, Share, and Discover What's Trending",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/Trends_Logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/Trends_Logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["social", "communication", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr"
+}
