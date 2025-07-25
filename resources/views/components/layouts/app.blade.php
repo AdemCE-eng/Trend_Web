@@ -109,7 +109,7 @@
   <div class="fixed bottom-4 left-4 right-4 mx-auto max-w-2xl">
     <form method="post" action="{{ route('tweet.create') }}" enctype="multipart/form-data">
       @csrf
-      <input type="hidden" name="parent_tweet_id" value="{{ request()->get('tweet_id', '') }}">
+      <input type="hidden" name="parent_tweet_id" value="{{ request()->tweet?->id }}">
       <div class="bg-base-100 border border-base-200 rounded-xl shadow-lg p-4 backdrop-blur-sm">
         <div class="flex flex-col gap-3">
           <div class="textarea-floating">
