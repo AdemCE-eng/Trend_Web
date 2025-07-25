@@ -83,6 +83,10 @@ Route::get('/register', [RegisterController::class, 'create'])
 
 Route::post('/register', [RegisterController::class, 'store']);
 
+Route::get('/privacy-terms', function () {
+    return view('legal.privacy_terms');
+})->name('privacy.terms');
+
 Route::get('/login', [LoginController::class, 'create'])
     ->name('login');
 Route::post('/login', [LoginController::class, 'store'])
