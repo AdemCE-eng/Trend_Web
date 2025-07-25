@@ -16,10 +16,12 @@ class HandlePostSizeError
     public function handle(Request $request, Closure $next): Response
     {
         // Check if POST content length exceeds PHP's post_max_size
-        if ($request->isMethod('POST') && empty($_POST) && empty($_FILES) && $request->getContentLength() > 0) {
+        $contentLength = (int) $request->server('CONTENT_LENGTH');
+
+        if ($request->isMethod('POST') && empty($_POST) && empty($_FILES) && $contentLength > 0) {
             $maxSize = $this->parseSize(ini_get('post_max_size'));
-            $actualSize = $request->getContentLength();
-            
+            $actualSize = $contentLength;
+
             if ($actualSize > $maxSize) {
                 return back()->withErrors([
                     'image' => sprintf(
@@ -33,6 +35,7 @@ class HandlePostSizeError
 
         return $next($request);
     }
+
 
     /**
      * Parse size string (like "8M") to bytes
