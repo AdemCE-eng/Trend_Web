@@ -47,13 +47,15 @@
                         <div class="flex-1 pb-4">
                             <div class="bg-base-100/95 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-base-300/50">
                                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                                    <div>
-                                        <h1 class="text-2xl sm:text-3xl font-bold text-base-content mb-1">
+                                    <div class="flex-1 min-w-0">
+                                        <h1 class="text-2xl sm:text-3xl font-bold text-base-content mb-1 truncate">
                                             {{ $user->name }}
                                         </h1>
                                         
                                         @if($user->bio)
-                                            <p class="text-base-content/80 max-w-md leading-relaxed">{{ $user->bio }}</p>
+                                            <p class="text-base-content/80 max-w-md leading-relaxed whitespace-pre-line break-words">
+                                                {{ $user->bio }}
+                                            </p>
                                         @endif
 
                                         <!-- Location & Website -->
@@ -94,7 +96,7 @@
                                                         onclick="toggleFollow({{ $user->getKey() }}, this)"
                                                         data-following="{{ $isFollowing ? 'true' : 'false' }}">
                                                     <span class="icon-[tabler--{{ $isFollowing ? 'user-minus' : 'user-plus' }}] size-4 mr-2 follow-icon"></span>
-                                                    <span class="follow-text">{{ $isFollowing ? 'Unfollow' : 'Follow' }}</span>
+          </button>                                          <span class="follow-text">{{ $isFollowing ? 'Unfollow' : 'Follow' }}</span>
                                                 </button>
                                             @endif
                                         @endauth
