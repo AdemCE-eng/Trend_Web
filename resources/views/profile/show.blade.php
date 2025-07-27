@@ -96,7 +96,7 @@
                                                         onclick="toggleFollow({{ $user->getKey() }}, this)"
                                                         data-following="{{ $isFollowing ? 'true' : 'false' }}">
                                                     <span class="icon-[tabler--{{ $isFollowing ? 'user-minus' : 'user-plus' }}] size-4 mr-2 follow-icon"></span>
-          </button>                                          <span class="follow-text">{{ $isFollowing ? 'Unfollow' : 'Follow' }}</span>
+                                                    <span class="follow-text">{{ $isFollowing ? 'Unfollow' : 'Follow' }}</span>
                                                 </button>
                                             @endif
                                         @endauth
