@@ -88,7 +88,7 @@
                        {{ old('remember') ? 'checked' : '' }} />
                 <label class="label-text p-0 text-sm text-base-content/80" for="rememberMe">Remember Me</label>
               </div>
-              <a href="#" class="link link-animated link-primary font-normal">Forgot Password?</a>
+              {{-- <a href="#" class="link link-animated link-primary font-normal">Forgot Password?</a> --}}
             </div>
             <button type="submit" class="btn btn-md btn-primary btn-gradient btn-block">Sign in to Trends</button>
           </form>
