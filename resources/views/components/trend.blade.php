@@ -128,21 +128,26 @@
                     <!-- Action buttons-->
                     <div class="flex items-center justify-between pt-3 mt-2">
                         <div class="flex items-center gap-1">
-                            @if(request()->route('tweet') && request()->route('tweet')->id == $tweet->id)
-                                <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/40 cursor-not-allowed" 
-                                        disabled
-                                        title="Currently viewing this tweet">
-                                    <span class="icon-[tabler--message-circle] size-4"></span>
-                                    <span class="hidden sm:inline">Reply</span>
-                                </button>
-                            @else
-                                <a href="{{ route('tweet.view', $tweet->baseTweet->id) }}" 
-                                   class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/60 hover:text-primary hover:bg-primary/10 transition-all duration-200"
-                                   title="Reply to this tweet">
-                                    <span class="icon-[tabler--message-circle] size-4"></span>
-                                    <span class="hidden sm:inline">Reply</span>
-                                </a>
-                            @endif
+@php
+    $replyCount = $tweet->baseTweet ? $tweet->baseTweet->replies->count() : $tweet->replies->count();
+@endphp
+@if(request()->route('tweet') && request()->route('tweet')->id == $tweet->id)
+    <button class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/40 cursor-not-allowed" 
+            disabled
+            title="Currently viewing this tweet">
+        <span class="icon-[tabler--message-circle] size-4"></span>
+        <span class="hidden sm:inline">Reply</span>
+        <span class="ml-1 text-xs text-base-content/40">{{ $replyCount }}</span>
+    </button>
+@else
+    <a href="{{ route('tweet.view', $tweet->baseTweet ? $tweet->baseTweet->id : $tweet->id) }}" 
+       class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content/60 hover:text-primary hover:bg-primary/10 transition-all duration-200"
+       title="Reply to this tweet">
+        <span class="icon-[tabler--message-circle] size-4"></span>
+        <span class="hidden sm:inline">Reply</span>
+        <span class="ml-1 text-xs text-base-content/40">{{ $replyCount }}</span>
+    </a>
+@endif
                         </div>
 
                         <div class="flex items-center gap-1">
