@@ -57,15 +57,15 @@ class TweetController extends Controller
     function view(Tweet $tweet)
     {
         $tweet->load(['user', 'likes', 'retweets', 'replies.user', 'replies.likes', 'replies.retweets', 'baseTweet.user'])
-               ->loadCount(['likes', 'retweets']);
-        
+            ->loadCount(['likes', 'retweets']);
+
         return view("tweet.view", compact("tweet"));
     }
 
     function store(StoreTweetRequest $request)
     {
         $data = $request->validated();
-        
+
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -73,7 +73,7 @@ class TweetController extends Controller
             $imagePath = $image->storeAs('tweets', $imageName, 'public');
             $data['image_path'] = $imagePath;
         }
-        
+
         $tweet = Auth::user()->tweets()->create($data);
         if ($tweet->baseTweet()->exists()) {
             $tweet->baseTweet()->associate($tweet->parentTweet->baseTweet->getKey())->save();
@@ -90,19 +90,26 @@ class TweetController extends Controller
     {
         try {
             $user = Auth::user();
-            
+
             if (!$user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
             // Find the original tweet (in case this is a retweet of a retweet)
             $originalTweet = $tweet->baseTweet ? $tweet->baseTweet : $tweet;
-            
+
+            // Prevent the author from retweeting their own tweet
+            if ($originalTweet->user_id === $user->getKey()) {
+                return response()->json([
+                    'error' => 'You cannot retweet your own tweet'
+                ], 403);
+            }
+
             // Check if user already retweeted the ORIGINAL tweet
             $existingRetweet = Tweet::where('user_id', $user->getKey())
-                                    ->where('base_tweet_id', $originalTweet->getKey())
-                                    ->whereNull('content')
-                                    ->first();
+                ->where('base_tweet_id', $originalTweet->getKey())
+                ->whereNull('content')
+                ->first();
 
             if ($existingRetweet) {
                 // Remove retweet
