@@ -30,6 +30,16 @@
     'depth' => 0,
     'maxDepth' => 3
 ])
+@if(request()->routeIs('tweet.view') && $depth === 0)
+    <!--Back Button-->
+    <div class="flex items-center mb-2">
+        <button onclick="history.back()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 dark:bg-base-200/90 border border-base-300 shadow-lg text-base-content/70 hover:text-primary hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-200"
+            style="backdrop-filter: blur(4px);">
+            <span class="icon-[tabler--arrow-left] size-5"></span>
+            <span class="text-sm font-semibold">Back</span>
+        </button>
+    </div>
+@endif
 <div class="group relative transition-all duration-200 hover:scale-[1.01] hover:shadow-lg">
     <div class="card card-border shadow-sm mt-4 bg-base-100 backdrop-blur-sm border border-gray-200/50 rounded-xl overflow-hidden hover:border-primary/30 transition-all duration-300">
         <div class="card-body p-5">
