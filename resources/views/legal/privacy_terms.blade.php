@@ -26,8 +26,5 @@
                 If you do not agree with these terms, please do not use this website.
             </p>
         </div>
-        <div class="mt-8">
-            <a href="{{ route('register') }}" class="btn btn-primary">Back to Registration</a>
-        </div>
     </div>
 </x-layouts.auth>
