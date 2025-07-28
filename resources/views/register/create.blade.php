@@ -234,7 +234,7 @@
                        required />
                 <label class="label-text p-0 text-sm text-base-content/80" for="policyagreement">
                   I agree to
-                  <a href="{{ route('privacy.terms') }}" class="link link-animated link-primary font-normal">privacy policy & terms</a>
+                  <a href="{{ route('privacy.terms') }}" class="link link-animated link-primary font-normal" target="_blank" rel="noopener">privacy policy & terms</a>
                 </label>
               </div>
               @error('terms')
