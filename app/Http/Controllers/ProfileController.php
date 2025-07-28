@@ -20,14 +20,26 @@ class ProfileController extends Controller
             ->with(['user', 'replies.user'])
             ->latest()
             ->paginate(10);
-            
+
         $stats = [
             'tweets_count' => $user->tweets()->count(),
             'following_count' => $user->following()->count(),
             'followers_count' => $user->followers()->count(),
         ];
 
-        return view('profile.show', compact('user', 'tweets', 'stats'));
+        $activeTab = request('tab', 'tweets');
+
+        if ($activeTab === 'tweets') {
+            $tweets = $user->tweets()->latest()->paginate(10);
+        } elseif ($activeTab === 'replies') {
+            $tweets = $user->tweets()->whereNotNull('parent_tweet_id')->latest()->paginate(10);
+        } elseif ($activeTab === 'media') {
+            $tweets = $user->tweets()->whereNotNull('image_path')->latest()->paginate(10);
+        } elseif ($activeTab === 'likes') {
+            $tweets = $user->likedTweets()->latest()->paginate(10);
+        }
+
+        return view('profile.show', compact('user', 'tweets', 'stats', 'activeTab'));
     }
 
     /**
@@ -58,19 +70,19 @@ class ProfileController extends Controller
         // Handle avatar upload
         if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
             $avatar = $request->file('avatar');
-            
+
             // Security: Validate MIME type server-side (no GIF support)
             $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!in_array($avatar->getMimeType(), $allowedMimes)) {
                 return back()->withErrors(['avatar' => 'Invalid file type detected. Only JPG and PNG files are allowed.']);
             }
-            
+
             // Delete old avatar if exists
             $oldAvatar = $user->getAttribute('avatar');
             if (!empty($oldAvatar) && Storage::disk('public')->exists($oldAvatar)) {
                 Storage::disk('public')->delete($oldAvatar);
             }
-            
+
             // Security: Use predefined extension based on MIME type
             $mimeToExtension = [
                 'image/jpeg' => 'jpg',
@@ -78,16 +90,16 @@ class ProfileController extends Controller
                 'image/png' => 'png'
             ];
             $extension = $mimeToExtension[$avatar->getMimeType()];
-            
+
             // Security: Generate secure filename like registration
             $filename = $user->getKey() . '_' . uniqid() . '_' . time() . '.' . $extension;
-            
+
             $path = Storage::disk('public')->putFileAs(
                 'avatars',
                 $avatar,
                 $filename
             );
-            
+
             if ($path) {
                 $validated['avatar'] = $path;
             }
@@ -96,19 +108,19 @@ class ProfileController extends Controller
         // Handle banner upload
         if ($request->hasFile('banner') && $request->file('banner')->isValid()) {
             $banner = $request->file('banner');
-            
+
             // Security: Validate MIME type server-side (no GIF support)
             $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!in_array($banner->getMimeType(), $allowedMimes)) {
                 return back()->withErrors(['banner' => 'Invalid file type detected. Only JPG and PNG files are allowed.']);
             }
-            
+
             // Delete old banner if exists
             $oldBanner = $user->getAttribute('banner');
             if (!empty($oldBanner) && Storage::disk('public')->exists($oldBanner)) {
                 Storage::disk('public')->delete($oldBanner);
             }
-            
+
             // Security: Use predefined extension based on MIME type
             $mimeToExtension = [
                 'image/jpeg' => 'jpg',
@@ -116,16 +128,16 @@ class ProfileController extends Controller
                 'image/png' => 'png'
             ];
             $extension = $mimeToExtension[$banner->getMimeType()];
-            
+
             // Security: Generate secure filename like registration
             $filename = $user->getKey() . '_' . uniqid() . '_' . time() . '.' . $extension;
-            
+
             $path = Storage::disk('public')->putFileAs(
                 'banners',
                 $banner,
                 $filename
             );
-            
+
             if ($path) {
                 $validated['banner'] = $path;
             }
