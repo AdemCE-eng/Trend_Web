@@ -71,12 +71,14 @@
           <span class="font-medium">Settings</span>
         </a>
         </li>
+        {{--
         <li>
         <a class="dropdown-item rounded-lg p-3 hover:bg-base-200/80 transition-all duration-200 flex items-center gap-3" href="#">
           <span class="icon-[tabler--help-triangle] text-primary"></span>
           <span class="font-medium">Help & Support</span>
         </a>
         </li>
+        --}}
         <li class="dropdown-footer gap-2 mt-2 pt-2 border-t border-base-200/50">
         <form method="post" action="{{ route('logout') }}" class="w-full">
           @csrf
