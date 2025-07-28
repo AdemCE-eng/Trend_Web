@@ -137,45 +137,76 @@
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-12">
             <div class="bg-base-100/80 backdrop-blur-sm rounded-2xl shadow-xl border border-base-300/50 overflow-hidden">
                 <!-- Tab Header -->
-                <div class="px-6 py-4 border-b border-base-300/50">
+                <div class="px-6 py-4 border-b border-base-300/50" id="tabs">
                     <div class="flex items-center gap-6">
-                        <button class="relative px-4 py-2 text-primary font-semibold">
+                        <a href="?tab=tweets#tabs" class="relative px-4 py-2 font-semibold transition-colors {{ $activeTab === 'tweets' ? 'text-primary' : 'text-base-content/60 hover:text-base-content' }}">
                             Tweets
-                            <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
-                        </button>
-                        <button class="px-4 py-2 text-base-content/60 hover:text-base-content font-medium transition-colors">
+                            @if($activeTab === 'tweets')
+                                <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                            @endif
+                        </a>
+                        <a href="?tab=replies#tabs" class="relative px-4 py-2 font-semibold transition-colors {{ $activeTab === 'replies' ? 'text-primary' : 'text-base-content/60 hover:text-base-content' }}">
                             Replies
-                        </button>
-                        <button class="px-4 py-2 text-base-content/60 hover:text-base-content font-medium transition-colors">
+                            @if($activeTab === 'replies')
+                                <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                            @endif
+                        </a>
+                        <a href="?tab=media#tabs" class="relative px-4 py-2 font-semibold transition-colors {{ $activeTab === 'media' ? 'text-primary' : 'text-base-content/60 hover:text-base-content' }}">
                             Media
-                        </button>
-                        <button class="px-4 py-2 text-base-content/60 hover:text-base-content font-medium transition-colors">
+                            @if($activeTab === 'media')
+                                <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                            @endif
+                        </a>
+                        <a href="?tab=likes#tabs" class="relative px-4 py-2 font-semibold transition-colors {{ $activeTab === 'likes' ? 'text-primary' : 'text-base-content/60 hover:text-base-content' }}">
                             Likes
-                        </button>
+                            @if($activeTab === 'likes')
+                                <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></div>
+                            @endif
+                        </a>
                     </div>
                 </div>
 
                 <!-- Tweets List -->
-                <div class="divide-y divide-base-300/50">
+                @if($activeTab === 'tweets')
                     @forelse($tweets as $tweet)
                         <div class="p-6 hover:bg-base-100 transition-colors duration-200">
                             <x-trend :tweet="$tweet" />
                         </div>
                     @empty
                         <div class="p-12">
-                            <x-empty-state 
-                                title="No tweets yet"
-                                description="{{ $user->name }} hasn't posted any tweets."
-                            />
+                            <x-empty-state title="No tweets yet" description="{{ $user->name }} hasn't posted any tweets." />
                         </div>
                     @endforelse
-                </div>
-
-                <!-- Pagination -->
-                @if($tweets->hasPages())
-                    <div class="px-6 py-4 border-t border-base-300/50">
-                        {{ $tweets->links() }}
-                    </div>
+                @elseif($activeTab === 'replies')
+                    @forelse($tweets as $tweet)
+                        <div class="p-6 hover:bg-base-100 transition-colors duration-200">
+                            <x-trend :tweet="$tweet" />
+                        </div>
+                    @empty
+                        <div class="p-12">
+                            <x-empty-state title="No replies yet" description="{{ $user->name }} hasn't replied to any tweets." />
+                        </div>
+                    @endforelse
+                @elseif($activeTab === 'media')
+                    @forelse($tweets as $tweet)
+                        <div class="p-6 hover:bg-base-100 transition-colors duration-200">
+                            <x-trend :tweet="$tweet" />
+                        </div>
+                    @empty
+                        <div class="p-12">
+                            <x-empty-state title="No media tweets yet" description="{{ $user->name }} hasn't posted any media tweets." />
+                        </div>
+                    @endforelse
+                @elseif($activeTab === 'likes')
+                    @forelse($tweets as $tweet)
+                        <div class="p-6 hover:bg-base-100 transition-colors duration-200">
+                            <x-trend :tweet="$tweet" />
+                        </div>
+                    @empty
+                        <div class="p-12">
+                            <x-empty-state title="No liked tweets yet" description="{{ $user->name }} hasn't liked any tweets yet." />
+                        </div>
+                    @endforelse
                 @endif
             </div>
         </div>
