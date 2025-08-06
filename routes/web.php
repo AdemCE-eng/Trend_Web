@@ -49,13 +49,13 @@ Route::get('/tweet/{tweet}', [TweetController::class, 'view'])
 Route::middleware(['auth', 'throttle:30,1'])->group(function () {
     Route::post('/tweet/create', [TweetController::class, 'store'])
         ->name('tweet.create');
-        
+
     Route::post('/tweet/{tweet}/like', [LikeController::class, 'toggle'])
         ->name('tweet.like');
-    
+
     Route::post('/tweet/{tweet}/retweet', [TweetController::class, 'retweet'])
         ->name('tweet.retweet');
-    
+
     Route::post('/user/{user}/follow', [FollowController::class, 'toggle'])
         ->name('user.follow');
 });
@@ -64,15 +64,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return redirect()->route('profile.show', auth()->user());
     })->name('profile');
-    
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-    
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-    
-    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])
-        ->name('profile.password.update');
+
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile/edit', 'edit')
+            ->name('profile.edit');
+
+        Route::patch('/profile',  'update')
+            ->name('profile.update');
+
+        Route::patch('/profile/password', 'updatePassword')
+            ->name('profile.password.update');
+    });
 });
 
 Route::get('/profile/{user}', [ProfileController::class, 'show'])
