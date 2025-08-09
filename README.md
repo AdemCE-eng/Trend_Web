@@ -124,4 +124,4 @@ If you discover any security vulnerabilities, please send an email to the projec
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](LICENSE).
